@@ -1,0 +1,1626 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f8f4ef">
+<title>Rotina Carol · Treino</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f1eb;
+    --bg-gradient: linear-gradient(180deg, #f8f4ef 0%, #f0eae2 100%);
+    --surface: #ffffff;
+    --surface-soft: #fcfaf6;
+    --border: rgba(0,0,0,0.06);
+    --border-strong: rgba(0,0,0,0.1);
+    --text: #1a1a1a;
+    --text-soft: #4a4a4a;
+    --text-dim: #8a8a8a;
+    --text-faint: #b0b0b0;
+    --accent: #6b5fb5;
+    --accent-soft: #e8e4f5;
+
+    --body-neutral: #c4bdd0;
+    --body-active: #a890d8;
+    --equip: #8d7fd0;
+    --equip-dark: #6b5fb5;
+    --ground: #c0bcc8;
+
+    --pastel-lavender: #e8e1f5;
+    --pastel-peach: #fce0d2;
+    --pastel-sage: #dce8d4;
+    --pastel-sky: #d6e4ee;
+    --pastel-pink: #f5d8e0;
+    --pastel-yellow: #f8eccc;
+    --pastel-cream: #f3ebd9;
+
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 2px 12px rgba(0,0,0,0.05);
+    --shadow-lg: 0 8px 28px rgba(0,0,0,0.06);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-gradient);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 400;
+    overflow-x: hidden;
+  }
+
+  /* ===== TOP BAR ===== */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(248, 244, 239, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .brand { display: flex; flex-direction: column; line-height: 1.05; }
+  .brand .name { font-size: 18px; font-weight: 500; color: var(--text); letter-spacing: -0.3px; }
+  .brand .sub { font-size: 9px; letter-spacing: 3px; color: var(--text-dim); margin-top: 2px; font-weight: 600; }
+
+  .top-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  .top-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 8px 14px;
+    border-radius: 100px;
+    font-size: 12px;
+    color: var(--text-soft);
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s ease;
+  }
+  .top-btn:hover { border-color: var(--border-strong); }
+
+  /* ===== TABS ===== */
+  .tabs-wrap {
+    background: rgba(248, 244, 239, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    position: sticky;
+    top: 56px;
+    z-index: 99;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tabs {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    background: rgba(0,0,0,0.03);
+    border-radius: 100px;
+    padding: 4px;
+    width: fit-content;
+    margin: 0 auto;
+    max-width: 100%;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+
+  .tab {
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    padding: 8px 14px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .tab .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-faint); transition: all 0.2s ease; }
+  .tab[data-tab="a"] .dot { background: #c4a8e8; }
+  .tab[data-tab="b"] .dot { background: #e8b5a8; border-radius: 2px; }
+  .tab[data-tab="c"] .dot { background: #a8c8a8; }
+  .tab[data-tab="d"] .dot { background: #e8a8b8; }
+  .tab[data-tab="cardio"] .dot { background: #a8c4d8; border-radius: 2px; }
+  .tab[data-tab="dicas"] .dot { background: #d8c4a8; }
+
+  .tab.active { background: var(--surface); color: var(--text); box-shadow: var(--shadow-sm); }
+
+  /* ===== CONTAINER ===== */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 28px 20px 60px;
+  }
+
+  /* ===== HERO ===== */
+  .hero { margin-bottom: 28px; }
+
+  .hero .eyebrow {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+
+  .hero h1 {
+    font-size: 42px;
+    font-weight: 500;
+    letter-spacing: -1.2px;
+    line-height: 1.05;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  .hero .lead {
+    font-size: 15px;
+    color: var(--text-soft);
+    max-width: 560px;
+    line-height: 1.55;
+  }
+
+  /* ===== PANELS ===== */
+  .panel { display: none; animation: fade 0.4s ease; }
+  .panel.active { display: block; }
+
+  @keyframes fade {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== TWO COLUMN ===== */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 760px) { .two-col { grid-template-columns: 1fr; gap: 14px; } }
+
+  /* ===== CARD ===== */
+  .card {
+    background: var(--surface);
+    border-radius: 22px;
+    padding: 22px 24px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+  }
+
+  .card-label {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    color: var(--text-dim);
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  /* ===== FOCO CARDS ===== */
+  .foco-item {
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .foco-item:last-child { margin-bottom: 0; }
+  .foco-num {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .foco-text { font-size: 13px; color: var(--text); flex: 1; }
+  .foco-text strong { font-weight: 600; }
+  .foco-text .meta { color: var(--text-dim); font-size: 12px; }
+
+  /* ===== INFO LIST ===== */
+  .info-row {
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+  }
+  .info-row:last-child { margin-bottom: 0; }
+  .info-tag {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  /* ===== TREINOS GRID ===== */
+  .treinos-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 8px;
+  }
+  @media (max-width: 760px) {
+    .treinos-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .treino-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 18px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .treino-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+  }
+
+  .treino-card[data-color="lavender"]::before { background: #c4a8e8; }
+  .treino-card[data-color="peach"]::before { background: #e8b5a8; }
+  .treino-card[data-color="sage"]::before { background: #a8c8a8; }
+  .treino-card[data-color="pink"]::before { background: #e8a8b8; }
+
+  .treino-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+
+  .treino-card .letter {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text);
+    margin-top: 6px;
+    margin-bottom: 4px;
+    letter-spacing: -1px;
+  }
+
+  .treino-card .title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .treino-card .day {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .treino-card .meta {
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  /* ===== PANEL HEADER ===== */
+  .panel-eyebrow-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .panel-eyebrow {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .panel-meta-line {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .meta-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 5px 12px;
+    border-radius: 100px;
+    font-size: 11px;
+    color: var(--text-soft);
+    font-weight: 500;
+  }
+
+  /* ===== EXERCISE CARDS ===== */
+  .ex-list { display: grid; gap: 14px; }
+
+  .ex-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 22px 24px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease;
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 22px;
+    align-items: flex-start;
+  }
+
+  @media (max-width: 600px) {
+    .ex-card {
+      grid-template-columns: 80px 1fr;
+      gap: 16px;
+      padding: 18px;
+    }
+  }
+
+  .ex-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-1px);
+  }
+
+  .ex-anatomy {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: var(--surface-soft);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+  }
+
+  .ex-anatomy svg { width: 100%; height: 100%; display: block; }
+
+  .ex-body { min-width: 0; }
+
+  .ex-num {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+
+  .ex-name {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.3;
+    color: var(--text);
+    margin-bottom: 12px;
+    letter-spacing: -0.2px;
+  }
+
+  .ex-stats {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+
+  .ex-chip {
+    font-size: 11px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    padding: 5px 11px;
+    border-radius: 6px;
+    font-weight: 600;
+  }
+
+  .ex-chip.rest {
+    background: rgba(0,0,0,0.04);
+    color: var(--text-dim);
+  }
+
+  .ex-notes { display: grid; gap: 10px; }
+
+  .ex-note-line {
+    font-size: 12.5px;
+    color: var(--text-soft);
+    line-height: 1.55;
+    display: flex;
+    gap: 10px;
+  }
+
+  .ex-note-line .label {
+    flex-shrink: 0;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    width: 70px;
+    padding-top: 2px;
+    color: var(--accent);
+  }
+
+  .ex-note-line.evite .label { color: #c08070; }
+
+  .ex-note-line .text { flex: 1; }
+  .ex-note-line .text strong { color: var(--text); font-weight: 600; }
+
+  @media (max-width: 600px) {
+    .ex-note-line {
+      flex-direction: column;
+      gap: 3px;
+    }
+    .ex-note-line .label { width: auto; padding-top: 0; }
+  }
+
+  /* ===== CARDIO ===== */
+  .cardio-grid { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 760px) { .cardio-grid { grid-template-columns: 1fr; } }
+
+  .cardio-card {
+    background: var(--surface);
+    border-radius: 18px;
+    padding: 22px 24px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .cardio-card.lavender { background: var(--pastel-lavender); border-color: transparent; }
+  .cardio-card.sage { background: var(--pastel-sage); border-color: transparent; }
+  .cardio-card.sky { background: var(--pastel-sky); border-color: transparent; }
+  .cardio-card.peach { background: var(--pastel-peach); border-color: transparent; }
+
+  .cardio-card .duration {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(0,0,0,0.5);
+    font-weight: 600;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .cardio-card .name {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 10px;
+    letter-spacing: -0.3px;
+  }
+
+  .cardio-card .desc {
+    font-size: 13px;
+    color: var(--text-soft);
+    line-height: 1.55;
+  }
+  .cardio-card .desc strong { color: var(--text); font-weight: 600; }
+
+  /* ===== TIPS ===== */
+  .tips-grid { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 760px) { .tips-grid { grid-template-columns: 1fr; } }
+
+  .tip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 18px;
+    font-size: 13px;
+    color: var(--text-soft);
+    line-height: 1.55;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .tip .tip-num {
+    display: inline-block;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 22px;
+    margin-right: 8px;
+  }
+
+  .tip strong { color: var(--text); font-weight: 600; }
+
+  .progress-card {
+    background: linear-gradient(135deg, var(--pastel-lavender), var(--pastel-pink));
+    border-radius: 18px;
+    padding: 24px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+  }
+
+  .progress-card .title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+
+  .progress-card .text {
+    font-size: 13px;
+    color: var(--text-soft);
+    line-height: 1.55;
+  }
+  .progress-card .text strong { color: var(--text); font-weight: 600; }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 11px;
+    color: var(--text-faint);
+    line-height: 1.8;
+  }
+
+  /* ===== MOBILE ===== */
+  @media (max-width: 600px) {
+    .topbar { padding: 12px 16px; }
+    .brand .name { font-size: 16px; }
+    .tabs-wrap { padding: 10px 16px; top: 52px; }
+    .container { padding: 22px 16px 40px; }
+    .hero h1 { font-size: 30px; }
+    .card { padding: 18px 18px; }
+    .ex-name { font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="brand">
+    <div class="name">Rotina Carol</div>
+    <div class="sub">TREINO</div>
+  </div>
+  <div class="top-actions">
+    <button class="top-btn">↻ Recarregar</button>
+    <button class="top-btn">↓ Salvar</button>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab active" data-tab="semana"><span class="dot"></span> Visão geral</button>
+    <button class="tab" data-tab="a"><span class="dot"></span> Treino A</button>
+    <button class="tab" data-tab="b"><span class="dot"></span> Treino B</button>
+    <button class="tab" data-tab="c"><span class="dot"></span> Treino C</button>
+    <button class="tab" data-tab="d"><span class="dot"></span> Treino D</button>
+    <button class="tab" data-tab="cardio"><span class="dot"></span> Cardio</button>
+    <button class="tab" data-tab="dicas"><span class="dot"></span> Dicas</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ==================== VISÃO GERAL ==================== -->
+  <section class="panel active" id="panel-semana">
+
+    <div class="hero">
+      <div class="eyebrow">PLANO DE TREINO · INICIANTE</div>
+      <h1>Boa, Carol.</h1>
+      <p class="lead">Volta aos treinos com constância. 4 dias de musculação, 2 de cardio, 1 de descanso. Foco em emagrecer pra 60-65kg sem perder músculo.</p>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-label">METAS · ATÉ DEZ/2026</div>
+        <div class="foco-item">
+          <div class="foco-num">1</div>
+          <div class="foco-text"><strong>Constância:</strong> <span class="meta">4 treinos toda semana, sem falhar 2 seguidos</span></div>
+        </div>
+        <div class="foco-item">
+          <div class="foco-num">2</div>
+          <div class="foco-text"><strong>Emagrecimento:</strong> <span class="meta">de 72kg pra 65kg em ~5 meses</span></div>
+        </div>
+        <div class="foco-item">
+          <div class="foco-num">3</div>
+          <div class="foco-text"><strong>Força:</strong> <span class="meta">progredir carga a cada 2-3 semanas</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">DA ROTINA</div>
+        <div class="info-row">
+          <span class="info-tag">FREQ</span>
+          <span>4× musculação + 2× cardio · 1 dia off</span>
+        </div>
+        <div class="info-row">
+          <span class="info-tag">SPLIT</span>
+          <span>Por grupo muscular (A/B/C/D)</span>
+        </div>
+        <div class="info-row">
+          <span class="info-tag">DURAÇÃO</span>
+          <span>~50min por sessão</span>
+        </div>
+        <div class="info-row">
+          <span class="info-tag">NÍVEL</span>
+          <span>Iniciante voltando · sem técnicas avançadas</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-label">OS QUATRO TREINOS</div>
+    <div class="treinos-grid">
+      <div class="treino-card" data-color="lavender" data-go="a">
+        <div class="day">SEGUNDA</div>
+        <div class="letter">A</div>
+        <div class="title">Quadríceps</div>
+        <div class="meta">+ Panturrilha · 6 ex.</div>
+      </div>
+      <div class="treino-card" data-color="peach" data-go="b">
+        <div class="day">TERÇA</div>
+        <div class="letter">B</div>
+        <div class="title">Costas + Ombro</div>
+        <div class="meta">6 exercícios</div>
+      </div>
+      <div class="treino-card" data-color="sage" data-go="c">
+        <div class="day">QUINTA</div>
+        <div class="letter">C</div>
+        <div class="title">Glúteo + Posterior</div>
+        <div class="meta">6 exercícios</div>
+      </div>
+      <div class="treino-card" data-color="pink" data-go="d">
+        <div class="day">SEXTA</div>
+        <div class="letter">D</div>
+        <div class="title">Peito + Braço</div>
+        <div class="meta">Tri + Bi · 6 ex.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== TREINO A ==================== -->
+  <section class="panel" id="panel-a">
+    <div class="hero">
+      <div class="panel-eyebrow-row">
+        <div class="panel-eyebrow">SEGUNDA · TREINO A</div>
+      </div>
+      <h1>Quadríceps + panturrilha</h1>
+      <div class="panel-meta-line" style="margin-top: 14px;">
+        <span class="meta-chip">6 exercícios</span>
+        <span class="meta-chip">~50min</span>
+        <span class="meta-chip">3 séries</span>
+        <span class="meta-chip">10-15 reps</span>
+      </div>
+    </div>
+
+    <div class="ex-list">
+
+      <!-- A1 - Cadeira extensora -->
+      <div class="ex-card">
+        <div class="ex-anatomy">
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <rect x="8" y="44" width="26" height="4" fill="#c0bcc8" rx="1"/>
+            <rect x="8" y="22" width="4" height="24" fill="#c0bcc8" rx="1"/>
+            <circle cx="20" cy="22" r="4" fill="#c4bdd0"/>
+            <rect x="16" y="26" width="9" height="15" fill="#c4bdd0" rx="2"/>
+            <rect x="22" y="38" width="16" height="6" fill="#c4bdd0" rx="2"/>
+            <rect x="36" y="33" width="18" height="5" fill="#a890d8" rx="2" transform="rotate(-20 45 35)"/>
+            <circle cx="56" cy="27" r="4" fill="#8d7fd0"/>
+            <line x1="2" y1="76" x2="78" y2="76" stroke="#c0bcc8" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="ex-body">
+          <div class="ex-num">01 · AQUECIMENTO</div>
+          <div class="ex-name">Cadeira extensora</div>
+          <div class="ex-stats">
+            <span class="ex-chip">3 × 12-15</span>
+            <span class="ex-chip rest">60s descanso</span>
+          </div>
+          <div class="ex-notes">
+            <div class="ex-note-line"><div class="label">Posição</div><div class="text">Sentada, costas no encosto, joelhos alinhados com o eixo da máquina (eixo fica na lateral, na altura do joelho). Tornozelos atrás do rolo, ajuste o assento se precisar.</div></div>
+            <div class="ex-note-line"><div class="label">Execução</div><div class="text">Estende as pernas pra frente até quase travar o joelho. <strong>Segura 1-2s em cima</strong> apertando a parte da frente da coxa. Desce em 2s, controlado. Repete.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- A2 - Agachamento Smith -->
+      <div class="ex-card">
+        <div class="ex-anatomy">
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <line x1="14" y1="8" x2="14" y2="76" stroke="#c0bcc8" stroke-width="2"/>
+            <line x1="66" y1="8" x2="66" y2="76" stroke="#c0bcc8" stroke-width="2"/>
+            <rect x="10" y="28" width="60" height="4" fill="#8d7fd0" rx="1"/>
+            <rect x="6" y="24" width="6" height="12" fill="#6b5fb5" rx="1"/>
+            <rect x="68" y="24" width="6" height="12" fill="#6b5fb5" rx="1"/>
+            <circle cx="40" cy="22" r="4" fill="#c4bdd0"/>
+            <path d="M35 32 L35 48 L45 48 L45 32 Z" fill="#c4bdd0"/>
+            <path d="M35 48 L31 64 L39 64 L40 48 Z" fill="#a890d8"/>
+            <path d="M45 48 L49 64 L41 64 L40 48 Z" fill="#a890d8"/>
+            <rect x="30" y="64" width="7" height="11" fill="#c4bdd0" rx="2"/>
+            <rect x="43" y="64" width="7" height="11" fill="#c4bdd0" rx="2"/>
+            <line x1="4" y1="76" x2="76" y2="76" stroke="#c0bcc8" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="ex-body">
+          <div class="ex-num">02 · COMPOSTO</div>
+          <div class="ex-name">Agachamento no Smith</div>
+          <div class="ex-stats">
+            <span class="ex-chip">3 × 10-12</span>
+            <span class="ex-chip rest">90s descanso</span>
+          </div>
+          <div class="ex-notes">
+            <div class="ex-note-line"><div class="label">Posição</div><div class="text">Barra apoiada no <strong>trapézio</strong> (parte de cima das costas, não no pescoço). Pés na largura dos ombros, pontas levemente abertas. Pés um pouco à frente do quadril.</div></div>
+            <div class="ex-note-line"><div class="label">Execução</div><div class="text">Desce empurrando o quadril como se fosse sentar numa cadeira. Vai até as coxas ficarem paralelas ao chão (~90°). <strong>Segura 1s embaixo</strong>. Sobe contraindo glúteo e quadríceps.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- A3 - Leg press -->
+      <div class="ex-card">
+        <div class="ex-anatomy">
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <rect x="6" y="46" width="32" height="24" fill="#c0bcc8" rx="2" transform="rotate(-15 22 58)"/>
+            <rect x="40" y="14" width="34" height="6" fill="#8d7fd0" rx="2" transform="rotate(-20 57 17)"/>
+            <rect x="38" y="12" width="6" height="14" fill="#6b5fb5" rx="1" transform="rotate(-20 41 19)"/>
+            <rect x="70" y="6" width="6" height="14" fill="#6b5fb5" rx="1" transform="rotate(-20 73 13)"/>
+            <circle cx="18" cy="44" r="4" fill="#c4bdd0"/>
+            <rect x="20" y="42" width="14" height="9" fill="#c4bdd0" rx="2" transform="rotate(-15 27 46)"/>
+            <rect x="32" y="40" width="14" height="6" fill="#a890d8" rx="2" transform="rotate(-25 39 43)"/>
+            <rect x="44" y="30" width="14" height="5" fill="#a890d8" rx="2" transform="rotate(-30 51 32)"/>
+            <line x1="2" y1="76" x2="78" y2="76" stroke="#c0bcc8" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="ex-body">
+          <div class="ex-num">03 · MÁQUINA</div>
+          <div class="ex-name">Leg press 45°</div>
+          <div class="ex-stats">
+            <span class="ex-chip">3 × 12</span>
+            <span class="ex-chip rest">75s descanso</span>
+          </div>
+          <div class="ex-notes">
+            <div class="ex-note-line"><div class="label">Posição</div><div class="text">Sentada com costas e quadril bem apoiados no banco. Pés na plataforma na <strong>largura do quadril, no meio dela</strong>. Ajusta pra que joelhos formem 90° quando descer.</div></div>
+            <div class="ex-note-line"><div class="label">Execução</div><div class="text">Empurra pra cima destravando a máquina. Desce a plataforma controlada até joelhos formarem ~90° (não desça mais que isso). Empurra de volta <strong>sem travar o joelho em cima</strong>.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- A4 - Avanço -->
+      <div class="ex-card">
+        <div class="ex-anatomy">
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="40" cy="14" r="4" fill="#c4bdd0"/>
+            <rect x="36" y="18" width="9" height="18" fill="#c4bdd0" rx="2"/>
+            <rect x="25" y="22" width="4" height="14" fill="#c4bdd0" rx="2"/>
+            <rect x="51" y="22" width="4" height="14" fill="#c4bdd0" rx="2"/>
+            <circle cx="27" cy="38" r="3" fill="#6b5fb5"/>
+            <circle cx="53" cy="38" r="3" fill="#6b5fb5"/>
+            <path d="M40 36 L26 58 L34 58 Z" fill="#a890d8"/>
+            <path d="M40 36 L56 58 L48 58 Z" fill="#a890d8"/>
+            <rect x="22" y="58" width="8" height="14" fill="#c4bdd0" rx="2"/>
+            <rect x="50" y="58" width="8" height="14" fill="#c4bdd0" rx="2"/>
+            <ellipse cx="26" cy="74" rx="6" ry="2" fill="#c0bcc8"/>
+            <ellipse cx="54" cy="74" rx="6" ry="2" fill="#c0bcc8"/>
+            <line x1="2" y1="76" x2="78" y2="76" stroke="#c0bcc8" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="ex-body">
+          <div class="ex-num">04 · UNILATERAL</div>
+          <div class="ex-name">Avanço com halteres</div>
+          <div class="ex-stats">
+            <span class="ex-chip">3 × 10 cada perna</span>
+            <span class="ex-chip rest">60s descanso</span>
+          </div>
+          <div class="ex-notes">
+            <div class="ex-note-line"><div class="label">Posição</div><div class="text">Em pé, um halter em cada mão, braços ao lado do corpo. Pés juntos. Tronco ereto.</div></div>
+            <div class="ex-note-line"><div class="label">Execução</div><div class="text">Dá um <strong>passo grande pra frente</strong>. Dobra ambos os joelhos até o de trás quase tocar o chão. O joelho da frente forma 90° e fica alinhado com o pé. Empurra com o calcanhar da perna da frente pra voltar. Pode fazer estacionário (mesmo lugar) ou caminhando.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- A5 - Goblet squat -->
+      <div class="ex-card">
+        <div class="ex-anatomy">
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="40" cy="14" r="4" fill="#c4bdd0"/>
+            <rect x="35" y="18" width="10" height="14" fill="#c4bdd0" rx="2"/>
+            <rect x="36" y="22" width="8" height="14" fill="#6b5fb5" rx="2"/>
+            <rect x="29" y="22" width="4" height="14" fill="#c4bdd0" rx="2" transform="rotate(20 31 28)"/>
+            <rect x="47" y="22" width="4" height="14" fill="#c4bdd0" rx="2" transform="rotate(-20 49 28)"/>
+            <path d="M35 36 L28 52 L40 52 Z" fill="#a890d8"/>
+            <path d="M45 36 L52 52 L40 52 Z" fill="#a890d8"/>
+            <rect x="26" y="52" width="9" height="20" fill="#c4bdd0" rx="2" transform="rotate(15 30 60)"/>
+            <rect x="45" y="52" width="9" height="20" fill="#c4bdd0" rx="2" transform="rotate(-15 50 60)"/>
+            <ellipse cx="22" cy="74" rx="6" ry="2" fill="#c0bcc8"/>
+            <ellipse cx="58" cy="74" rx="6" ry="2" fill="#c0bcc8"/>
+            <line x1="2" y1="76" x2="78" y2="76" stroke="#c0bcc8" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="ex-body">
+          <div class="ex-num">05 · COMPOSTO</div>
+          <div class="ex-name">Goblet squat</div>
+          <div class="ex-stats">
+            <span class="ex-chip">3 × 12</span>
+            <span class="ex-chip rest">60s descanso</span>
+          </div>
+          <div class="ex-notes">
+            <div class="ex-note-line"><div class="label">Posição</div><div class="text">Em pé, segurando um halter na <strong>vertical contra o peito</strong>, como se fosse um cálice. As duas mãos segurando o lado de cima dele. Cotovelos pra baixo e pra dentro. Pés um pouco mais abertos que a largura dos ombros, pontas levemente pra fora.</div></div>
+            <div class="ex-note-line"><div class="label">Execução</div><div class="text">Desce o quadril como se fosse sentar, descendo até os <strong>cotovelos encostarem na parte de dentro dos joelhos</strong>. Sobe contraindo o quadríceps e o glúteo. Os cotovelos servem de guia: eles "abrem" os joelhos pra fora.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- A6 - Panturrilha -->
+      <div class="ex-card">
+        <div class="ex-anatomy">
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="40" cy="14" r="4" fill="#c4bdd0"/>
+            <rect x="36" y="18" width="9" height="18" fill="#c4bdd0" rx="2"/>
+            <rect x="22" y="14" width="6" height="22" fill="#c0bcc8" rx="1"/>
+            <rect x="52" y="14" width="6" height="22" fill="#c0bcc8" rx="1"/>
+            <rect x="34" y="36" width="13" height="6" fill="#c4bdd0" rx="2"/>
+            <rect x="35" y="42" width="5" height="18" fill="#c4bdd0" rx="2"/>
+            <rect x="41" y="42" width="5" height="18" fill="#c4bdd0" rx="2"/>
+            <ellipse cx="37" cy="54" rx="2" ry="6" fill="#a890d8"/>
+            <ellipse cx="44" cy="54" rx="2" ry="6" fill="#a890d8"/>
+            <path d="M33 60 L41 60 L48 60 L48 64 L33 64 Z" fill="#c4bdd0"/>
+            <ellipse cx="40" cy="64" rx="9" ry="2" fill="#6b5fb5"/>
+            <line x1="2" y1="76" x2="78" y2="76" stroke="#c0bcc8" stroke-width="1.5"/>
+            <rect x="2" y="68" width="76" height="6" fill="#c0bcc8" rx="1"/>
+          </svg>
+        </div>
+        <div class="ex-body">
+          <div class="ex-num">06 · ISOLADO</div>
+          <div class="ex-name">Panturrilha em pé na máquina</div>
+          <div class="ex-stats">
+            <span class="ex-chip">3 × 15</span>
+            <span class="ex-chip rest">45s descanso</span>
+          </div>
+          <div class="ex-notes">
+            <div class="ex-note-line"><div class="label">Posição</div><div class="text">Em pé na máquina (ou na borda do leg press), com <strong>só a ponta dos pés na plataforma</strong>, calcanhar fora. Ombros sob o apoio acolchoado, joelhos quase estendidos (sem travar).</div></div>
+            <div class="ex-note-line"><div class="label">Execução</div><div class="text">Desce o calcanhar até o máximo (sente o alongamento da panturrilha). Sobe na ponta dos pés até o topo, <strong>segura 1s contraindo</strong>. Desce controlado de novo.</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== TREINO B ==================== -->
+  <section class="panel" id="panel-b">
+    <div class="hero">
+      <div class="panel-eyebrow-row">
+        <div class="panel-eyebrow">TERÇA · TREINO B</div>
+      </div>
+      <h1>Costas e ombro</h1>
+      <div class="panel-meta-line" style="margin-top: 14px;">
+        <span class="meta-chip">6 exercícios</span>
+        <span class="meta-chip">~55min</span>
+        <span class="meta-chip">3 séries</span>
+        <span class="meta-chip">10-15 reps</span>
+      </div>
+    </div>
+
+    <div class="ex-list">
+
+      <!-- B1 - Puxada frontal -->
+      <div class="ex-card">
+        <div class="ex-anatomy">
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <rect x="12" y="6" width="56" height="3" fill="#8d7fd0" rx="1"/>
+            <line x1="22" y1="9" x2="22" y2="22" stroke="#6b5fb5" stroke-width="2"/>
+            <line x1="58" y1="9" x2="58" y2="22" stroke="#6b5fb5" stroke-width="2"/>
+            <rect x="14" y="22" width="52" height="3" fill="#8d7fd0" rx="1"/>
+            <circle cx="40" cy="32" r="4" fill="#c4bdd0"/>
+            <path d="M35 36 L34 50 L46 50 L45 36 Z" fill="#c4bdd0"/>
+            <rect x="20" y="22" width="4" height="16" fill="#a890d8" rx="2" transform="rotate(15 22 30)"/>
+            <rect x="56" y="22" width="4" height="16" fill="#a890d8" rx="2" transform="rotate(-15 58 30)"/>
+            <rect x="36" y="50" width="8" height="10" fill="#c0bcc8" rx="2"/>
+            <rect x="30" y="60" width="20" height="4" fill="#c0bcc8" rx="1"/>
+            <rect x="34" y="64" width="5" height="10" fill="#c4bdd0" rx="1"/>
+            <rect x="41" y="64" width="5" height="10" fill="#c4bdd0" rx="1"/>
+          </svg>
+        </div>
+        <div class="ex-body">
+          <div class="ex-num">01 · COMPOSTO</div>
+          <div class="ex-name">Puxada frontal na polia</div>
+          <div class="ex-stats">
+            <span class="ex-chip">3 × 10-12</span>
+            <span class="ex-chip rest">75s descanso</span>
+          </div>
+          <div class="ex-notes">
+            <div class="ex-note-line"><div class="label">Posição</div><div class="text">Sentada na máquina, joelhos firmes sob o apoio. Pega a barra com as mãos <strong>mais abertas que os ombros</strong>, pegada pronada (palmas pra frente).</div></div>
+            <div class="ex-note-line"><div class="label">Execução</div><div class="text">Tronco levemente inclinado pra trás (~10°). Puxa a barra <strong>até a linha do peito</strong>, levando os cotovelos pra baixo e pra trás. Aperta as escápulas no final. Sobe controlado, sem deixar o peso bater.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B2 - Remada baixa -->
+      <div class="ex-card">
+        <div class="ex-anatomy">
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <rect x="8" y="38" width="38" height="6" fill="#c0bcc8" rx="2"/>
+            <line x1="64" y1="20" x2="64" y2="60" stroke="#c0bcc8" stroke-width="2"/>
+            <circle cx="64" cy="56" r="3" fill="#6b5fb5"/>
+            <circle cx="20" cy="34" r="4" fill="#c4bdd0"/>
+            <path d="M16 38 L17 50 L24 50 L23 38 Z" fill="#c4bdd0"/>
+            <rect x="22" y="44" width="20" height="5" fill="#a890d8" rx="2"/>
+            <rect x="40" y="44" width="22" height="4" fill="#8d7fd0" rx="1"/>
+            <rect x="24" y="50" width="20" height="5" fill="#c4bdd0" rx="2"/>
+            <rect x="42" y="44" width="5" height="14" fill="#c4bdd0" rx="2"/>
+            <line x1="2" y1="74" x2="78" y2="74" stroke="#c0bcc8" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="ex-body">
+          <div class="ex-num">02 · COMPOSTO</div>
+          <div class="ex-name">Remada baixa na polia (triângulo)</div>
+          <div class="ex-stats">
+            <span class="ex-chip">3 × 12</span>
+            <span class="ex-chip rest">75s descanso</span>
+          </div>
+          <div class="ex-notes">
+            <div class="ex-note-line"><div class="label">Posição</div><div class="text">Sentada com pés apoiados na plataforma, joelhos levemente flexionados. Segura o triângulo da polia baixa. <strong>Tronco ereto</strong>, peito aberto.</div></div>
+            <div class="ex-note-line"><div class="label">Execução</div><div class="text">Puxa o triângulo em direção ao umbigo, <strong>cotovelos colados ao corpo</strong>. Aperta as escápulas (omoplatas) no final, como se quisesse esmagar uma laranja entre elas. Volta controlada.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B3 - Pulldown neutro -->
+      <div class="ex-card">
+        <div class="ex-anatomy">
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="6" width="40" height="3" fill="#8d7fd0" rx="1"/>
+            <line x1="34" y1="9" x2="34" y2="22" stroke="#6b5fb5" stroke-width="2"/>
+            <line x1="46" y1="9" x2="46" y2="22" stroke="#6b5fb5" stroke-width="2"/>
+            <rect x="32" y="20" width="4" height="6" fill="#8d7fd0" rx="1"/>
+            <rect x="44" y="20" width="4" height="6" fill="#8d7fd0" rx="1"/>
+            <circle cx="40" cy="32" r="4" fill="#c4bdd0"/>
+            <path d="M35 36 L34 52 L46 52 L45 36 Z" fill="#c4bdd0"/>
+            <rect x="32" y="24" width="4" height="14" fill="#a890d8" rx="2"/>
+            <rect x="44" y="24" width="4" height="14" fill="#a890d8" rx="2"/>
+            <rect x="36" y="52" width="8" height="10" fill="#c0bcc8" rx="2"/>
+            <rect x="30" y="62" width="20" height="4" fill="#c0bcc8" rx="1"/>
+            <rect x="34" y="66" width="5" height="10" fill="#c4bdd0" rx="1"/>
+            <rect x="41" y="66" width="5" height="10" fill="#c4bdd0" rx="1"/>
+          </svg>
+        </div>
+        <div class="ex-body">
+          <div class="ex-num">03 · COMPOSTO</div>
+          <div class="ex-name">Pulldown pegada neutra</div>
+          <div class="ex-stats">
+            <span class="ex-chip">3 × 12</span>
+            <span class="ex-chip rest">60s descanso</span>
+          </div>
+          <div class="ex-notes">
+            <div class="ex-note-line"><div class="label">Posição</div><div class="text">Sentada na máquina de puxada, mas com a barra de <strong>pegada neutra</strong> (palmas viradas uma pra outra, mãos próximas). Joelhos firmes sob o apoio.</div></div>
+            <div class="ex-note-line"><div class="label">Execução</div><div class="text">Puxa a barra em direção ao peito, <strong>cotovelos colados ao tronco</strong> descendo na vertical. Tronco quase reto, só levemente inclinado. Aperta as escápulas no final.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B4 - Desenvolvimento -->
+      <div class="ex-card">
+        <div class="ex-anatomy">
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <rect x="34" y="60" width="12" height="14" fill="#c0bcc8" rx="2"/>
+            <rect x="22" y="30" width="4" height="40" fill="#c0bcc8" rx="1"/>
+            <circle cx="40" cy="24" r="4" fill="#c4bdd0"/>
+            <path d="M35 28 L34 52 L46 52 L45 28 Z" fill="#c4bdd0"/>
+            <rect x="28" y="24" width="5" height="16" fill="#a890d8" rx="2" transform="rotate(-15 30 32)"/>
+            <rect x="47" y="24" width="5" height="16" fill="#a890d8" rx="2" transform="rotate(15 50 32)"/>
+            <rect x="22" y="10" width="9" height="14" fill="#6b5fb5" rx="2"/>
+            <rect x="49" y="10" width="9" height="14" fill="#6b5fb5" rx="2"/>
+          </svg>
+        </div>
+        <div class="ex-body">
+          <div class="ex-num">04 · COMPOSTO</div>
+          <div class="ex-name">Desenvolvimento com halteres sentada</div>
+          <div class="ex-stats">
+            <span class="ex-chip">3 × 10-12</span>
+            <span class="ex-chip rest">75s descanso</span>
+          </div>
+          <div class="ex-notes">
+            <div class="ex-note-line"><div class="label">Posição</div><div class="text">Sentada num banco com encosto. Halteres na <strong>altura dos ombros, palmas pra frente</strong>. Cotovelos um pouco à frente do corpo (não totalmente abertos lateralmente).</div></div>
+            <div class="ex-note-line"><div class="label">Execução</div><div class="text">Empurra os halteres pra cima, em uma trajetória levemente em V (eles se aproximam no topo sem encostar). <strong>Não trava o cotovelo</strong> em cima. Desce controlado até cotovelos na altura do ombro.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B5 - Elevação lateral -->
+      <div class="ex-card">
+        <div class="ex-anatomy">
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="40" cy="18" r="4" fill="#c4bdd0"/>
+            <rect x="35" y="22" width="10" height="22" fill="#c4bdd0" rx="2"/>
+            <rect x="12" y="32" width="22" height="4" fill="#a890d8" rx="2"/>
+            <rect x="46" y="32" width="22" height="4" fill="#a890d8" rx="2"/>
+            <rect x="6" y="29" width="8" height="10" fill="#6b5fb5" rx="2"/>
+            <rect x="66" y="29" width="8" height="10" fill="#6b5fb5" rx="2"/>
+            <rect x="35" y="44" width="10" height="20" fill="#c4bdd0" rx="2"/>
+            <rect x="33" y="64" width="6" height="12" fill="#c4bdd0" rx="2"/>
+            <rect x="41" y="64" width="6" height="12" fill="#c4bdd0" rx="2"/>
+            <line x1="2" y1="76" x2="78" y2="76" stroke="#c0bcc8" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="ex-body">
+          <div class="ex-num">05 · ISOLADO</div>
+          <div class="ex-name">Elevação lateral com halteres</div>
+          <div class="ex-stats">
+            <span class="ex-chip">3 × 12-15</span>
+            <span class="ex-chip rest">45s descanso</span>
+          </div>
+          <div class="ex-notes">
+            <div class="ex-note-line"><div class="label">Posição</div><div class="text">Em pé, halteres ao lado do corpo, palmas viradas pro corpo. <strong>Cotovelos levemente flexionados</strong> (não totalmente esticados). Pés na largura do quadril, leve flexão de joelho.</div></div>
+            <div class="ex-note-line"><div class="label">Execução</div><div class="text">Sobe os halteres lateralmente, como se fosse abrir os braços, <strong>até a altura do ombro</strong> (não passa disso). Cotovelos sobem antes das mãos. Desce em 2-3s, controlado.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B6 - Crucifixo invertido -->
+      <div class="ex-card">
+        <div class="ex-anatomy">
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="40" width="40" height="8" fill="#c0bcc8" rx="2"/>
+            <rect x="38" y="48" width="4" height="14" fill="#c0bcc8" rx="1"/>
+            <rect x="20" y="62" width="40" height="4" fill="#c0bcc8" rx="1"/>
+            <circle cx="40" cy="32" r="4" fill="#c4bdd0"/>
+            <path d="M33 36 L33 44 L47 44 L47 36 Z" fill="#a890d8"/>
+            <rect x="10" y="33" width="20" height="4" fill="#a890d8" rx="2" transform="rotate(-10 20 35)"/>
+            <rect x="50" y="33" width="20" height="4" fill="#a890d8" rx="2" transform="rotate(10 60 35)"/>
+            <rect x="6" y="30" width="6" height="8" fill="#6b5fb5" rx="1"/>
+            <rect x="68" y="30" width="6" height="8" fill="#6b5fb5" rx="1"/>
+          </svg>
+        </div>
+        <div class="ex-body">
+          <div class="ex-num">06 · ISOLADO</div>
+          <div class="ex-name">Crucifixo invertido (peck deck inverso)</div>
+          <div class="ex-stats">
+            <span class="ex-chip">3 × 12-15</span>
+            <span class="ex-chip rest">45s descanso</span>
+          </div>
+          <div class="ex-notes">
+            <div class="ex-note-line"><div class="label">Posição</div><div class="text">Na máquina peck deck virada de costas (peito apoiado no banco). Ou em pé na polia cruzada, ou com halteres curvada com tronco quase horizontal. Pega as alças com as <strong>palmas viradas uma pra outra</strong>.</div></div>
+            <div class="ex-note-line"><div class="label">Execução</div><div class="text">Abre os braços pros lados, <strong>levando as mãos pra trás</strong>. Cotovelos levemente flexionados. Aperta as escápulas no final. Volta controlada.</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== TREINO C ==================== -->
+  <section class="panel" id="panel-c">
+    <div class="hero">
+      <div class="panel-eyebrow-row">
+        <div class="panel-eyebrow">QUINTA · TREINO C</div>
+      </div>
+      <h1>Glúteo e posterior</h1>
+      <div class="panel-meta-line" style="margin-top: 14px;">
+        <span class="meta-chip">6 exercícios</span>
+        <span class="meta-chip">~55min</span>
+        <span class="meta-chip">3 séries</span>
+        <span class="meta-chip">10-15 reps</span>
+      </div>
+    </div>
+
+    <div class="ex-list">
+
+      <!-- C1 - Cadeira abdutora -->
+      <div class="ex-card">
+        <div class="ex-anatomy">
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <rect x="34" y="48" width="12" height="20" fill="#c0bcc8" rx="2"/>
+            <rect x="28" y="14" width="6" height="34" fill="#c0bcc8" rx="2"/>
+            <rect x="46" y="14" width="6" height="34" fill="#c0bcc8" rx="2"/>
+            <circle cx="40" cy="22" r="4" fill="#c4bdd0"/>
+            <rect x="35" y="26" width="10" height="22" fill="#c4bdd0" rx="2"/>
+            <ellipse cx="28" cy="50" rx="6" ry="5" fill="#a890d8"/>
+            <ellipse cx="52" cy="50" rx="6" ry="5" fill="#a890d8"/>
+            <rect x="20" y="48" width="10" height="6" fill="#a890d8" rx="2" transform="rotate(15 25 51)"/>
+            <rect x="50" y="48" width="10" height="6" fill="#a890d8" rx="2" transform="rotate(-15 55 51)"/>
+            <rect x="14" y="54" width="6" height="14" fill="#c4bdd0" rx="2"/>
+            <rect x="60" y="54" width="6" height="14" fill="#c4bdd0" rx="2"/>
+            <line x1="2" y1="76" x2="78" y2="76" stroke="#c0bcc8" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="ex-body">
+          <div class="ex-num">01 · ATIVAÇÃO</div>
+          <div class="ex-name">Cadeira abdutora (tronco inclinado)</div>
+          <div class="ex-stats">
+            <span class="ex-chip">3 × 15</span>
+            <span class="ex-chip rest">45s descanso</span>
+          </div>
+          <div class="ex-notes">
+            <div class="ex-note-line"><div class="label">Posição</div><div class="text">Sentada na máquina abdutora (a que abre as pernas). Para foco em glúteo: <strong>inclina o tronco pra frente</strong>, apoiando os antebraços nas coxas. Pés relaxados.</div></div>
+            <div class="ex-note-line"><div class="label">Execução</div><div class="text">Empurra as pernas pra fora, abrindo. <strong>Segura 1s no final</strong> apertando o glúteo. Volta controlada, sem deixar fechar totalmente.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- C2 - Hip thrust -->
+      <div class="ex-card">
+        <div class="ex-anatomy">
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <rect x="6" y="28" width="20" height="6" fill="#c0bcc8" rx="2"/>
+            <rect x="6" y="34" width="3" height="20" fill="#c0bcc8" rx="1"/>
+            <rect x="23" y="34" width="3" height="20" fill="#c0bcc8" rx="1"/>
+            <circle cx="20" cy="28" r="4" fill="#c4bdd0"/>
+            <rect x="22" y="28" width="14" height="6" fill="#c4bdd0" rx="2"/>
+            <ellipse cx="40" cy="32" rx="8" ry="5" fill="#a890d8"/>
+            <rect x="38" y="34" width="20" height="4" fill="#8d7fd0" rx="2"/>
+            <rect x="34" y="30" width="50" height="3" fill="#8d7fd0" rx="1"/>
+            <rect x="32" y="26" width="6" height="11" fill="#6b5fb5" rx="1"/>
+            <rect x="56" y="26" width="6" height="11" fill="#6b5fb5" rx="1"/>
+            <rect x="48" y="36" width="6" height="20" fill="#c4bdd0" rx="2"/>
+            <rect x="42" y="56" width="14" height="4" fill="#c4bdd0" rx="2"/>
+            <line x1="2" y1="76" x2="78" y2="76" stroke="#c0bcc8" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="ex-body">
+          <div class="ex-num">02 · COMPOSTO</div>
+          <div class="ex-name">Hip thrust (elevação pélvica) com barra</div>
+          <div class="ex-stats">
+            <span class="ex-chip">3 × 10-12</span>
+            <span class="ex-chip rest">90s descanso</span>
+          </div>
+          <div class="ex-notes">
+            <div class="ex-note-line"><div class="label">Posição</div><div class="text">Sentada no chão, costas apoiadas num banco (na altura da omoplata). Barra apoiada na <strong>dobra do quadril</strong> com almofada (importante, dói sem). Pés apoiados no chão, joelhos a 90°.</div></div>
+            <div class="ex-note-line"><div class="label">Execução</div><div class="text">Empurra o quadril pra cima usando o calcanhar. Sobe até o corpo formar uma <strong>linha reta dos joelhos aos ombros</strong>. Aperta o glúteo no topo, segura 1s. Desce controlada (não encosta o quadril no chão entre reps).</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- C3 - Stiff -->
+      <div class="ex-card">
+        <div class="ex-anatomy">
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="20" cy="22" r="4" fill="#c4bdd0"/>
+            <rect x="22" y="20" width="38" height="8" fill="#c4bdd0" rx="2" transform="rotate(10 40 24)"/>
+            <rect x="56" y="32" width="6" height="22" fill="#c4bdd0" rx="2"/>
+            <rect x="50" y="48" width="6" height="20" fill="#a890d8" rx="2"/>
+            <rect x="60" y="48" width="6" height="20" fill="#a890d8" rx="2"/>
+            <rect x="46" y="34" width="14" height="3" fill="#c4bdd0" rx="1"/>
+            <rect x="42" y="34" width="6" height="10" fill="#6b5fb5" rx="1"/>
+            <rect x="58" y="34" width="6" height="10" fill="#6b5fb5" rx="1"/>
+            <ellipse cx="51" cy="70" rx="6" ry="2" fill="#c0bcc8"/>
+            <ellipse cx="63" cy="70" rx="6" ry="2" fill="#c0bcc8"/>
+            <line x1="2" y1="76" x2="78" y2="76" stroke="#c0bcc8" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="ex-body">
+          <div class="ex-num">03 · COMPOSTO</div>
+          <div class="ex-name">Stiff com halteres</div>
+          <div class="ex-stats">
+            <span class="ex-chip">3 × 10-12</span>
+            <span class="ex-chip rest">75s descanso</span>
+          </div>
+          <div class="ex-notes">
+            <div class="ex-note-line"><div class="label">Posição</div><div class="text">Em pé, halteres à frente das coxas, palmas viradas pro corpo. Pés na largura do quadril, <strong>joelhos quase travados</strong> (levíssima flexão).</div></div>
+            <div class="ex-note-line"><div class="label">Execução</div><div class="text">Desce o tronco <strong>empurrando o quadril pra trás</strong>, descendo os halteres rente às pernas. Vai até sentir o posterior de coxa esticando (geralmente entre a altura dos joelhos e canela). Desce em 3s. Volta contraindo o glúteo.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- C4 - Cadeira flexora -->
+      <div class="ex-card">
+        <div class="ex-anatomy">
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <rect x="8" y="50" width="50" height="6" fill="#c0bcc8" rx="2"/>
+            <rect x="8" y="56" width="3" height="14" fill="#c0bcc8" rx="1"/>
+            <rect x="55" y="56" width="3" height="14" fill="#c0bcc8" rx="1"/>
+            <circle cx="14" cy="48" r="4" fill="#c4bdd0"/>
+            <rect x="16" y="46" width="36" height="6" fill="#c4bdd0" rx="2"/>
+            <rect x="50" y="32" width="6" height="20" fill="#a890d8" rx="2" transform="rotate(-30 53 42)"/>
+            <rect x="56" y="32" width="6" height="20" fill="#a890d8" rx="2" transform="rotate(-30 59 42)"/>
+            <circle cx="63" cy="28" r="3" fill="#8d7fd0"/>
+            <line x1="2" y1="76" x2="78" y2="76" stroke="#c0bcc8" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="ex-body">
+          <div class="ex-num">04 · ISOLADO</div>
+          <div class="ex-name">Cadeira flexora deitada</div>
+          <div class="ex-stats">
+            <span class="ex-chip">3 × 12-15</span>
+            <span class="ex-chip rest">60s descanso</span>
+          </div>
+          <div class="ex-notes">
+            <div class="ex-note-line"><div class="label">Posição</div><div class="text">Deitada de barriga pra baixo na máquina (ou sentada se for sentada). <strong>Quadril colado no banco</strong>. Rolo na altura do tendão de Aquiles (acima do calcanhar).</div></div>
+            <div class="ex-note-line"><div class="label">Execução</div><div class="text">Flexiona os joelhos trazendo os calcanhares em direção ao bumbum. <strong>Contração total no final</strong>, segura 1s. Desce em 2-3s controlado.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- C5 - Sumô goblet -->
+      <div class="ex-card">
+        <div class="ex-anatomy">
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="40" cy="14" r="4" fill="#c4bdd0"/>
+            <rect x="35" y="18" width="10" height="14" fill="#c4bdd0" rx="2"/>
+            <rect x="36" y="22" width="8" height="14" fill="#6b5fb5" rx="2"/>
+            <rect x="29" y="22" width="4" height="14" fill="#c4bdd0" rx="2" transform="rotate(20 31 28)"/>
+            <rect x="47" y="22" width="4" height="14" fill="#c4bdd0" rx="2" transform="rotate(-20 49 28)"/>
+            <path d="M35 36 L18 50 L40 50 Z" fill="#a890d8"/>
+            <path d="M45 36 L62 50 L40 50 Z" fill="#a890d8"/>
+            <rect x="14" y="50" width="9" height="20" fill="#c4bdd0" rx="2" transform="rotate(25 18 60)"/>
+            <rect x="57" y="50" width="9" height="20" fill="#c4bdd0" rx="2" transform="rotate(-25 62 60)"/>
+            <ellipse cx="10" cy="72" rx="6" ry="2" fill="#c0bcc8"/>
+            <ellipse cx="70" cy="72" rx="6" ry="2" fill="#c0bcc8"/>
+            <line x1="2" y1="76" x2="78" y2="76" stroke="#c0bcc8" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="ex-body">
+          <div class="ex-num">05 · COMPOSTO</div>
+          <div class="ex-name">Agachamento sumô com halter</div>
+          <div class="ex-stats">
+            <span class="ex-chip">3 × 10-12</span>
+            <span class="ex-chip rest">75s descanso</span>
+          </div>
+          <div class="ex-notes">
+            <div class="ex-note-line"><div class="label">Posição</div><div class="text">Em pé, segurando um halter na vertical contra o peito (estilo goblet). Pés <strong>bem mais abertos que os ombros</strong> (uns 30cm além), pontas viradas pra fora a 45°. Joelhos seguindo a direção dos pés.</div></div>
+            <div class="ex-note-line"><div class="label">Execução</div><div class="text">Desce o quadril empurrando pra baixo entre os pés, <strong>tronco levemente inclinado pra frente</strong>. Vai até as coxas paralelas ao chão. Sobe contraindo o glúteo na subida.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- C6 - Coice -->
+      <div class="ex-card">
+        <div class="ex-anatomy">
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <line x1="6" y1="20" x2="6" y2="74" stroke="#c0bcc8" stroke-width="2"/>
+            <circle cx="6" cy="20" r="3" fill="#6b5fb5"/>
+            <rect x="6" y="44" width="20" height="3" fill="#8d7fd0" rx="1"/>
+            <circle cx="30" cy="38" r="4" fill="#c4bdd0"/>
+            <rect x="28" y="42" width="22" height="8" fill="#c4bdd0" rx="2"/>
+            <rect x="38" y="50" width="6" height="22" fill="#c4bdd0" rx="2"/>
+            <rect x="44" y="50" width="6" height="14" fill="#c4bdd0" rx="2"/>
+            <rect x="48" y="44" width="24" height="6" fill="#a890d8" rx="2"/>
+            <rect x="68" y="46" width="6" height="3" fill="#c0bcc8" rx="1"/>
+            <line x1="2" y1="76" x2="78" y2="76" stroke="#c0bcc8" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="ex-body">
+          <div class="ex-num">06 · UNILATERAL</div>
+          <div class="ex-name">Extensão de quadril no cross (coice)</div>
+          <div class="ex-stats">
+            <span class="ex-chip">3 × 12 cada</span>
+            <span class="ex-chip rest">45s descanso</span>
+          </div>
+          <div class="ex-notes">
+            <div class="ex-note-line"><div class="label">Posição</div><div class="text">No cross com a polia baixa, prende a caneleira no tornozelo. De frente pra máquina, <strong>tronco levemente inclinado pra frente</strong>, segurando o cross com as mãos pra apoio. Perna que vai trabalhar reta atrás.</div></div>
+            <div class="ex-note-line"><div class="label">Execução</div><div class="text">Leva a perna pra trás contraindo o glúteo. Movimento curto: <strong>vai só até o quadril estender</strong> (sem hiperestender). Segura 1s no final. Volta controlada.</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== TREINO D ==================== -->
+  <section class="panel" id="panel-d">
+    <div class="hero">
+      <div class="panel-eyebrow-row">
+        <div class="panel-eyebrow">SEXTA · TREINO D</div>
+      </div>
+      <h1>Peito, tríceps e bíceps</h1>
+      <div class="panel-meta-line" style="margin-top: 14px;">
+        <span class="meta-chip">6 exercícios</span>
+        <span class="meta-chip">~50min</span>
+        <span class="meta-chip">3 séries</span>
+        <span class="meta-chip">10-15 reps</span>
+      </div>
+    </div>
+
+    <div class="ex-list">
+
+      <!-- D1 - Supino reto -->
+      <div class="ex-card">
+        <div class="ex-anatomy">
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="44" width="60" height="6" fill="#c0bcc8" rx="2"/>
+            <rect x="14" y="50" width="3" height="14" fill="#c0bcc8" rx="1"/>
+            <rect x="63" y="50" width="3" height="14" fill="#c0bcc8" rx="1"/>
+            <circle cx="20" cy="42" r="4" fill="#c4bdd0"/>
+            <rect x="22" y="40" width="28" height="8" fill="#a890d8" rx="2"/>
+            <rect x="46" y="30" width="5" height="12" fill="#c4bdd0" rx="2"/>
+            <rect x="51" y="30" width="5" height="12" fill="#c4bdd0" rx="2"/>
+            <rect x="42" y="20" width="13" height="10" fill="#6b5fb5" rx="2"/>
+            <rect x="48" y="20" width="13" height="10" fill="#6b5fb5" rx="2"/>
+            <rect x="48" y="40" width="14" height="6" fill="#c4bdd0" rx="2"/>
+            <rect x="60" y="40" width="6" height="20" fill="#c4bdd0" rx="2"/>
+            <line x1="2" y1="76" x2="78" y2="76" stroke="#c0bcc8" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="ex-body">
+          <div class="ex-num">01 · COMPOSTO</div>
+          <div class="ex-name">Supino reto com halteres</div>
+          <div class="ex-stats">
+            <span class="ex-chip">3 × 10-12</span>
+            <span class="ex-chip rest">90s descanso</span>
+          </div>
+          <div class="ex-notes">
+            <div class="ex-note-line"><div class="label">Posição</div><div class="text">Deitada de costas num banco reto. Halteres acima do peito, palmas viradas pra frente. Pés firmes no chão. <strong>Escápulas apertadas</strong> contra o banco (peito pra cima).</div></div>
+            <div class="ex-note-line"><div class="label">Execução</div><div class="text">Desce os halteres controlada até alinhar com a linha do peito (ou pouco abaixo). <strong>Cotovelos a ~45° do tronco</strong> (não totalmente abertos). Empurra de volta sem travar o cotovelo.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- D2 - Supino inclinado máquina -->
+      <div class="ex-card">
+        <div class="ex-anatomy">
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="60" width="40" height="6" fill="#c0bcc8" rx="2" transform="rotate(-20 30 63)"/>
+            <rect x="44" y="14" width="3" height="50" fill="#c0bcc8" rx="1"/>
+            <rect x="14" y="64" width="3" height="12" fill="#c0bcc8" rx="1"/>
+            <circle cx="18" cy="36" r="4" fill="#c4bdd0"/>
+            <rect x="14" y="36" width="20" height="10" fill="#a890d8" rx="2" transform="rotate(-20 24 41)"/>
+            <rect x="32" y="36" width="14" height="6" fill="#c4bdd0" rx="2" transform="rotate(-20 39 39)"/>
+            <rect x="46" y="38" width="12" height="6" fill="#8d7fd0" rx="2"/>
+            <rect x="56" y="36" width="6" height="10" fill="#6b5fb5" rx="1"/>
+            <line x1="2" y1="76" x2="78" y2="76" stroke="#c0bcc8" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="ex-body">
+          <div class="ex-num">02 · MÁQUINA</div>
+          <div class="ex-name">Supino inclinado na máquina</div>
+          <div class="ex-stats">
+            <span class="ex-chip">3 × 12</span>
+            <span class="ex-chip rest">75s descanso</span>
+          </div>
+          <div class="ex-notes">
+            <div class="ex-note-line"><div class="label">Posição</div><div class="text">Sentada na máquina inclinada. Ajusta o banco pra que as <strong>pegadas fiquem na linha do peito superior</strong> (parte de cima do peito). Costas e cabeça apoiadas no banco.</div></div>
+            <div class="ex-note-line"><div class="label">Execução</div><div class="text">Empurra as pegadas pra frente, num movimento natural. <strong>Não trava o cotovelo</strong> em cima. Desce controlada até cotovelos voltarem na altura do peito.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- D3 - Crucifixo -->
+      <div class="ex-card">
+        <div class="ex-anatomy">
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <rect x="34" y="46" width="12" height="20" fill="#c0bcc8" rx="2"/>
+            <rect x="26" y="14" width="6" height="34" fill="#c0bcc8" rx="2"/>
+            <rect x="48" y="14" width="6" height="34" fill="#c0bcc8" rx="2"/>
+            <circle cx="40" cy="22" r="4" fill="#c4bdd0"/>
+            <rect x="35" y="26" width="10" height="20" fill="#a890d8" rx="2"/>
+            <rect x="32" y="30" width="6" height="6" fill="#c4bdd0" rx="2"/>
+            <rect x="42" y="30" width="6" height="6" fill="#c4bdd0" rx="2"/>
+            <rect x="22" y="26" width="14" height="6" fill="#c4bdd0" rx="2" transform="rotate(30 28 28)"/>
+            <rect x="44" y="26" width="14" height="6" fill="#c4bdd0" rx="2" transform="rotate(-30 52 28)"/>
+            <line x1="2" y1="76" x2="78" y2="76" stroke="#c0bcc8" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="ex-body">
+          <div class="ex-num">03 · ISOLADO</div>
+          <div class="ex-name">Crucifixo na máquina (peck deck)</div>
+          <div class="ex-stats">
+            <span class="ex-chip">3 × 12-15</span>
+            <span class="ex-chip rest">60s descanso</span>
+          </div>
+          <div class="ex-notes">
+            <div class="ex-note-line"><div class="label">Posição</div><div class="text">Sentada no peck deck, costas apoiadas. Antebraços contra os apoios acolchoados, <strong>cotovelos na altura dos ombros</strong>. Pega as alças com as palmas viradas uma pra outra.</div></div>
+            <div class="ex-note-line"><div class="label">Execução</div><div class="text">Fecha os braços trazendo os apoios pra frente, <strong>até quase se tocarem na frente do peito</strong>. Segura 1s contraindo o peito. Volta controlada em 2-3s.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- D4 - Tríceps -->
+      <div class="ex-card">
+        <div class="ex-anatomy">
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <line x1="40" y1="6" x2="40" y2="20" stroke="#c0bcc8" stroke-width="2"/>
+            <rect x="36" y="18" width="8" height="4" fill="#6b5fb5" rx="1"/>
+            <line x1="38" y1="22" x2="35" y2="40" stroke="#8d7fd0" stroke-width="2"/>
+            <line x1="42" y1="22" x2="45" y2="40" stroke="#8d7fd0" stroke-width="2"/>
+            <circle cx="40" cy="28" r="4" fill="#c4bdd0"/>
+            <rect x="35" y="32" width="10" height="20" fill="#c4bdd0" rx="2"/>
+            <rect x="29" y="32" width="6" height="14" fill="#c4bdd0" rx="2"/>
+            <rect x="45" y="32" width="6" height="14" fill="#c4bdd0" rx="2"/>
+            <rect x="30" y="42" width="5" height="14" fill="#a890d8" rx="2"/>
+            <rect x="45" y="42" width="5" height="14" fill="#a890d8" rx="2"/>
+            <rect x="33" y="52" width="14" height="6" fill="#c4bdd0" rx="2"/>
+            <rect x="33" y="58" width="6" height="14" fill="#c4bdd0" rx="2"/>
+            <rect x="41" y="58" width="6" height="14" fill="#c4bdd0" rx="2"/>
+            <line x1="2" y1="76" x2="78" y2="76" stroke="#c0bcc8" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="ex-body">
+          <div class="ex-num">04 · TRÍCEPS</div>
+          <div class="ex-name">Tríceps na polia com corda</div>
+          <div class="ex-stats">
+            <span class="ex-chip">3 × 12</span>
+            <span class="ex-chip rest">60s descanso</span>
+          </div>
+          <div class="ex-notes">
+            <div class="ex-note-line"><div class="label">Posição</div><div class="text">Em pé de frente pra polia alta. Pega a corda com cada mão numa extremidade. <strong>Cotovelos colados ao tronco</strong>, antebraços paralelos ao chão (a 90°). Tronco levemente inclinado pra frente, pés afastados pra estabilidade.</div></div>
+            <div class="ex-note-line"><div class="label">Execução</div><div class="text">Estende os antebraços pra baixo até quase travar o cotovelo. <strong>Abre a corda no final</strong>, levando as mãos pra os lados. Segura 1s contraindo o tríceps. Volta controlada até antebraço paralelo de novo.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- D5 - Rosca W -->
+      <div class="ex-card">
+        <div class="ex-anatomy">
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="40" cy="14" r="4" fill="#c4bdd0"/>
+            <rect x="35" y="18" width="10" height="22" fill="#c4bdd0" rx="2"/>
+            <rect x="29" y="20" width="6" height="20" fill="#c4bdd0" rx="2"/>
+            <rect x="45" y="20" width="6" height="20" fill="#c4bdd0" rx="2"/>
+            <rect x="31" y="36" width="5" height="6" fill="#a890d8" rx="2" transform="rotate(40 33 39)"/>
+            <rect x="44" y="36" width="5" height="6" fill="#a890d8" rx="2" transform="rotate(-40 47 39)"/>
+            <path d="M28 32 L36 24 L44 24 L52 32 L46 34 L34 34 Z" fill="#8d7fd0"/>
+            <rect x="20" y="28" width="8" height="10" fill="#6b5fb5" rx="2"/>
+            <rect x="52" y="28" width="8" height="10" fill="#6b5fb5" rx="2"/>
+            <rect x="35" y="40" width="10" height="22" fill="#c4bdd0" rx="2"/>
+            <rect x="33" y="62" width="6" height="14" fill="#c4bdd0" rx="2"/>
+            <rect x="41" y="62" width="6" height="14" fill="#c4bdd0" rx="2"/>
+            <line x1="2" y1="76" x2="78" y2="76" stroke="#c0bcc8" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="ex-body">
+          <div class="ex-num">05 · BÍCEPS</div>
+          <div class="ex-name">Rosca direta com barra W</div>
+          <div class="ex-stats">
+            <span class="ex-chip">3 × 10-12</span>
+            <span class="ex-chip rest">60s descanso</span>
+          </div>
+          <div class="ex-notes">
+            <div class="ex-note-line"><div class="label">Posição</div><div class="text">Em pé, segurando a barra W (a barra "ondulada") com pegada supinada (palmas pra cima), nas curvas da barra. <strong>Cotovelos colados ao tronco</strong>, braços estendidos pra baixo.</div></div>
+            <div class="ex-note-line"><div class="label">Execução</div><div class="text">Flexiona os cotovelos trazendo a barra <strong>em direção aos ombros</strong>. Sobe contraindo o bíceps, segura 1s em cima. Desce em 2s controlado, sem soltar lá embaixo.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- D6 - Rosca alternada -->
+      <div class="ex-card">
+        <div class="ex-anatomy">
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="40" cy="14" r="4" fill="#c4bdd0"/>
+            <rect x="35" y="18" width="10" height="22" fill="#c4bdd0" rx="2"/>
+            <rect x="29" y="20" width="6" height="16" fill="#c4bdd0" rx="2"/>
+            <rect x="29" y="32" width="6" height="6" fill="#a890d8" rx="2" transform="rotate(45 32 35)"/>
+            <rect x="22" y="28" width="10" height="6" fill="#6b5fb5" rx="2"/>
+            <rect x="45" y="20" width="6" height="20" fill="#c4bdd0" rx="2"/>
+            <rect x="51" y="36" width="6" height="6" fill="#8d7fd0" rx="2"/>
+            <rect x="54" y="38" width="10" height="6" fill="#6b5fb5" rx="2"/>
+            <rect x="35" y="40" width="10" height="22" fill="#c4bdd0" rx="2"/>
+            <rect x="33" y="62" width="6" height="14" fill="#c4bdd0" rx="2"/>
+            <rect x="41" y="62" width="6" height="14" fill="#c4bdd0" rx="2"/>
+            <line x1="2" y1="76" x2="78" y2="76" stroke="#c0bcc8" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="ex-body">
+          <div class="ex-num">06 · BÍCEPS</div>
+          <div class="ex-name">Rosca alternada com halteres</div>
+          <div class="ex-stats">
+            <span class="ex-chip">3 × 10 cada braço</span>
+            <span class="ex-chip rest">45s descanso</span>
+          </div>
+          <div class="ex-notes">
+            <div class="ex-note-line"><div class="label">Posição</div><div class="text">Em pé, halteres ao lado do corpo, palmas viradas pro corpo (pegada neutra). Cotovelos colados ao tronco.</div></div>
+            <div class="ex-note-line"><div class="label">Execução</div><div class="text">Sobe um braço de cada vez. Conforme sobe, <strong>vai supinando o punho</strong> (palma vai virando pra cima) até o halter chegar perto do ombro. Segura 1s em cima. Desce supinando de volta. Alterna braços.</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== CARDIO ==================== -->
+  <section class="panel" id="panel-cardio">
+    <div class="hero">
+      <div class="panel-eyebrow-row">
+        <div class="panel-eyebrow">QUARTA E SÁBADO · CARDIO</div>
+      </div>
+      <h1>Cardio em dias separados</h1>
+      <p class="lead" style="margin-top: 12px;">2 sessões por semana, longe dos treinos pesados. Foco em queima calórica sem prejudicar a recuperação muscular.</p>
+    </div>
+
+    <div class="cardio-grid">
+      <div class="cardio-card sky">
+        <div class="duration">QUARTA · 40-45 MIN</div>
+        <div class="name">LISS — caminhada inclinada</div>
+        <div class="desc">Esteira com <strong>inclinação 8-12%</strong> e velocidade 5-6 km/h. Batimentos em 65-70% do máximo. Pode assistir série, mas sem se segurar nas alças.</div>
+      </div>
+      <div class="cardio-card peach">
+        <div class="duration">SÁBADO · 25-30 MIN</div>
+        <div class="name">HIIT variado</div>
+        <div class="desc">5min aquecimento + 15min alternando <strong>30s forte + 60s leve</strong> + 5min calma. Bike, escada ou esteira inclinada.</div>
+      </div>
+      <div class="cardio-card lavender">
+        <div class="duration">ALTERNATIVA</div>
+        <div class="name">Bike ou elíptico moderado</div>
+        <div class="desc">30-40min em ritmo constante. Bom pra dias que as pernas estão cansadas. <strong>Mais leve nas articulações</strong>.</div>
+      </div>
+      <div class="cardio-card sage">
+        <div class="duration">ROTAÇÃO</div>
+        <div class="name">Como organizar</div>
+        <div class="desc"><strong>LISS na quarta</strong> entre B e C, <strong>HIIT no sábado</strong> longe de tudo. Variar entre as opções pra não enjoar.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== DICAS ==================== -->
+  <section class="panel" id="panel-dicas">
+    <div class="hero">
+      <div class="panel-eyebrow-row">
+        <div class="panel-eyebrow">PRINCÍPIOS · LER ANTES DE COMEÇAR</div>
+      </div>
+      <h1>Como tirar do papel</h1>
+    </div>
+
+    <div class="progress-card">
+      <div class="title">Progressão sem complicação</div>
+      <div class="text">Nas primeiras 2 semanas, foca em <strong>aprender a execução</strong> com carga leve. Da semana 3 em diante, aumenta o peso quando conseguir fazer todas as séries com boa execução nas reps mais altas da faixa. Sem pressa, sem drop sets, sem rest pause. Iniciante voltando não precisa disso ainda.</div>
+    </div>
+
+    <div class="tips-grid">
+      <div class="tip"><span class="tip-num">1</span><strong>Aquecimento:</strong> 5-8min de bike ou esteira leve antes de cada treino, e 1-2 séries leves no primeiro exercício.</div>
+      <div class="tip"><span class="tip-num">2</span><strong>Cargas:</strong> as últimas 2 reps devem ser desafiadoras mas com boa execução. Se conseguir fácil, sobe o peso.</div>
+      <div class="tip"><span class="tip-num">3</span><strong>Anota tudo:</strong> peso e reps de cada série, na nota do celular. Progresso sem registro é palpite.</div>
+      <div class="tip"><span class="tip-num">4</span><strong>Proteína:</strong> 1.6-2g por kg (~115-145g/dia). Cortar demais te faz perder músculo, não gordura.</div>
+      <div class="tip"><span class="tip-num">5</span><strong>Sono:</strong> mínimo 7h, ideal 8h. Sono ruim trava emagrecimento.</div>
+      <div class="tip"><span class="tip-num">6</span><strong>Água:</strong> 2.5L/dia. Garrafa do lado o tempo todo.</div>
+      <div class="tip"><span class="tip-num">7</span><strong>Constância &gt; intensidade:</strong> melhor 4× firme toda semana que 6× forte e parar em 3.</div>
+      <div class="tip"><span class="tip-num">8</span><strong>Reavalia em 6 semanas:</strong> mede por foto, espelho, roupa e carga. A balança sozinha mente.</div>
+      <div class="tip"><span class="tip-num">9</span><strong>Faltou aparelho:</strong> substitui pelo equivalente (puxada→remada, leg press→agacha) ou pula e volta depois.</div>
+      <div class="tip"><span class="tip-num">10</span><strong>Dia ruim:</strong> faz só 60% do treino. Treino ruim &gt; treino nenhum.</div>
+    </div>
+
+    <div class="progress-card" style="margin-top: 20px;">
+      <div class="title">Sobre a meta</div>
+      <div class="text">De 72kg pra 60-65kg é uma redução real e bem possível. Ritmo saudável é <strong>0.4-0.6kg por semana</strong>: pensa em 4-6 meses pra chegar nos 65, 8-10 meses pros 60. Mais rápido geralmente vem com perda de músculo e efeito sanfona. Confia no processo.</div>
+    </div>
+
+    <div class="footer">
+      Plano criado em maio/2026 · pra ajustes específicos, considera acompanhamento com educador físico presencial.
+    </div>
+  </section>
+
+</div>
+
+<script>
+  // Tab navigation
+  function switchTab(target) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelector('.tab[data-tab="' + target + '"]').classList.add('active');
+    document.getElementById('panel-' + target).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+  });
+
+  // Treino cards on overview - jump to that workout's tab
+  document.querySelectorAll('.treino-card').forEach(card => {
+    card.addEventListener('click', () => switchTab(card.dataset.go));
+  });
+</script>
+
+</body>
+</html>
