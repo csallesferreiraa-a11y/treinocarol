@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#f8f4ef">
+<meta name="theme-color" content="#F4F1EC">
 <title>Rotina Carol · Treino</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Fraunces:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #f5f1eb;
@@ -596,6 +596,884 @@
     .card { padding: 18px 18px; }
     .ex-name { font-size: 15px; }
   }
+
+  /* === Checkbox dos exercícios === */
+  .ex-card { position: relative; }
+  .ex-check-btn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid #d4cbdc;
+    background: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    z-index: 3;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .ex-check-btn:hover { border-color: #6b5fb5; transform: scale(1.05); }
+  .ex-check-btn.checked {
+    background: #6b5fb5;
+    border-color: #6b5fb5;
+  }
+  .ex-check-btn.checked::after {
+    content: '';
+    width: 6px;
+    height: 11px;
+    border-right: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+  .ex-card.done {
+    background: linear-gradient(180deg, rgba(107,95,181,0.04), rgba(107,95,181,0.02));
+  }
+  .ex-card.done .ex-name { color: #6b5fb5; }
+
+  /* Marcador de progresso no header de cada painel */
+  .panel-progress {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    padding: 6px 12px;
+    background: #f4f0fb;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b5fb5;
+    letter-spacing: 0.5px;
+  }
+  .panel-progress.complete {
+    background: #6b5fb5;
+    color: #fff;
+  }
+  .panel-progress .progress-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  /* === Botões de cardio === */
+  .cardio-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0 0 22px 0;
+    padding: 18px;
+    background: linear-gradient(135deg, #eaf3fa 0%, #f0f5fa 100%);
+    border-radius: 14px;
+    border: 1px solid #d4e3ee;
+  }
+  .cardio-actions .cardio-actions-label {
+    width: 100%;
+    font-size: 11px;
+    font-weight: 700;
+    color: #5b7a92;
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
+  }
+  .cardio-btn {
+    flex: 1;
+    min-width: 130px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1.5px solid #c4d5e3;
+    background: #fff;
+    color: #2c3e50;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+    font-family: inherit;
+  }
+  .cardio-btn:hover { border-color: #5b7a92; transform: translateY(-1px); }
+  .cardio-btn.checked {
+    background: #5b7a92;
+    border-color: #5b7a92;
+    color: #fff;
+  }
+  .cardio-btn.checked::before {
+    content: '✓ ';
+    font-weight: 800;
+  }
+
+  /* === Dashboard === */
+  .tab[data-tab="dashboard"] .dot { background: #6b5fb5; }
+
+  .dash-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+    margin-top: 8px;
+  }
+  @media (min-width: 720px) {
+    .dash-grid { grid-template-columns: 1fr 1fr; }
+    .dash-card.full { grid-column: 1 / -1; }
+  }
+
+  .dash-card {
+    background: #fff;
+    border: 1px solid #ece6f0;
+    border-radius: 16px;
+    padding: 22px;
+  }
+  .dash-card-eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #8c8090;
+    margin-bottom: 14px;
+  }
+  .dash-card-title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 26px;
+    font-weight: 500;
+    color: #2a2536;
+    margin-bottom: 4px;
+    line-height: 1.1;
+  }
+  .dash-card-sub {
+    font-size: 13px;
+    color: #6b6076;
+  }
+
+  /* Semana atual: 7 dias */
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    margin-top: 16px;
+  }
+  .day-cell {
+    aspect-ratio: 1 / 1.15;
+    border-radius: 10px;
+    background: #f7f3f9;
+    border: 1.5px solid #ede6f1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    padding: 4px;
+    transition: all 0.12s;
+  }
+  .day-cell:hover { border-color: #6b5fb5; transform: scale(1.02); }
+  .day-cell .day-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #8c8090;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .day-cell .day-num {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 18px;
+    color: #2a2536;
+    line-height: 1;
+  }
+  .day-cell .day-badges {
+    display: flex;
+    gap: 3px;
+    margin-top: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .day-cell.today {
+    border-color: #6b5fb5;
+    border-width: 2px;
+  }
+  .day-cell.today .day-label { color: #6b5fb5; }
+  .day-cell.has-activity { background: #fff; }
+  .day-badge {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .day-badge.A { background: #c4a8e8; }
+  .day-badge.B { background: #e8b5a8; }
+  .day-badge.C { background: #a8c8a8; }
+  .day-badge.D { background: #e8a8b8; }
+  .day-badge.cardio { background: #a8c4d8; border-radius: 2px; }
+
+  /* Totais */
+  .stat-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-top: 18px;
+  }
+  .stat-box {
+    background: #faf7fc;
+    border-radius: 10px;
+    padding: 14px 10px;
+    text-align: center;
+  }
+  .stat-box .stat-num {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 28px;
+    font-weight: 500;
+    color: #2a2536;
+    line-height: 1;
+  }
+  .stat-box .stat-num .stat-total {
+    font-size: 16px;
+    color: #8c8090;
+  }
+  .stat-box .stat-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #8c8090;
+    margin-top: 6px;
+  }
+
+  /* Streak */
+  .streak-display {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .streak-num {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 56px;
+    font-weight: 500;
+    color: #6b5fb5;
+    line-height: 1;
+  }
+  .streak-label {
+    font-size: 13px;
+    color: #6b6076;
+  }
+
+  /* Histórico de semanas */
+  .history-list {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .history-week {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: #faf7fc;
+    border-radius: 10px;
+  }
+  .history-week .hw-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #6b6076;
+    min-width: 80px;
+  }
+  .history-week .hw-bars {
+    display: flex;
+    gap: 4px;
+    flex: 1;
+    flex-wrap: wrap;
+  }
+  .history-week .hw-bar {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    background: #ede6f1;
+  }
+  .history-week .hw-bar.A { background: #c4a8e8; }
+  .history-week .hw-bar.B { background: #e8b5a8; }
+  .history-week .hw-bar.C { background: #a8c8a8; }
+  .history-week .hw-bar.D { background: #e8a8b8; }
+  .history-week .hw-bar.cardio { background: #a8c4d8; border-radius: 2px; }
+  .history-week .hw-meta {
+    font-size: 11px;
+    color: #8c8090;
+    text-align: right;
+    min-width: 60px;
+  }
+  .history-week.complete .hw-meta { color: #6b5fb5; font-weight: 700; }
+  .history-empty {
+    padding: 24px 14px;
+    text-align: center;
+    color: #8c8090;
+    font-size: 13px;
+    background: #faf7fc;
+    border-radius: 10px;
+    margin-top: 14px;
+  }
+
+  /* Modal de edição de dia */
+  .day-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(42, 37, 54, 0.4);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+  }
+  .day-modal-overlay.open { display: flex; }
+  .day-modal {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    max-width: 380px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+  .day-modal h3 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 22px;
+    font-weight: 500;
+    margin: 0 0 6px 0;
+    color: #2a2536;
+  }
+  .day-modal .day-modal-sub {
+    font-size: 12px;
+    color: #8c8090;
+    letter-spacing: 0.5px;
+    margin-bottom: 18px;
+  }
+  .day-modal-section {
+    margin-bottom: 18px;
+  }
+  .day-modal-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #8c8090;
+    margin-bottom: 10px;
+  }
+  .day-modal-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .day-modal-options.three { grid-template-columns: 1fr 1fr 1fr; }
+  .day-modal-btn {
+    padding: 10px 8px;
+    border-radius: 8px;
+    border: 1.5px solid #ede6f1;
+    background: #fff;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: #2a2536;
+    transition: all 0.12s;
+    font-family: inherit;
+    text-align: center;
+  }
+  .day-modal-btn:hover { border-color: #6b5fb5; }
+  .day-modal-btn.active {
+    background: #6b5fb5;
+    border-color: #6b5fb5;
+    color: #fff;
+  }
+  .day-modal-btn.clear {
+    grid-column: 1 / -1;
+    background: #f7f3f9;
+    color: #6b6076;
+    border-color: transparent;
+  }
+  .day-modal-footer {
+    display: flex;
+    gap: 10px;
+    margin-top: 6px;
+  }
+  .day-modal-footer button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    font-family: inherit;
+  }
+  .day-modal-cancel {
+    background: #f4f0fb;
+    color: #6b6076;
+  }
+  .day-modal-save {
+    background: #6b5fb5;
+    color: #fff;
+  }
+
+  /* Toast simples */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #2a2536;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 600;
+    z-index: 200;
+    opacity: 0;
+    transition: all 0.25s ease;
+    pointer-events: none;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+
+
+  /* ============================================
+     REDESIGN · ESTILO ROTINA CAROL
+     Background gradiente + glass effect + Manrope
+     ============================================ */
+  :root {
+    /* Sobrescreve a paleta antiga */
+    --bg: #F4F1EC;
+    --bg-a: #F4F1EC;
+    --bg-b: #ECE7E0;
+    --bg-c: #E8E2F0;
+    --surface: rgba(255, 255, 255, 0.72);
+    --surface-soft: rgba(255, 255, 255, 0.55);
+    --border: rgba(0, 0, 0, 0.06);
+    --border-strong: rgba(0, 0, 0, 0.12);
+    --text: #1C1C1E;
+    --text-soft: #3A3A3D;
+    --text-dim: #6B6B70;
+    --text-faint: #A1A1A6;
+    --accent: #5B5BD6;
+    --accent-soft: #E8E6FF;
+
+    --glass: rgba(255, 255, 255, 0.55);
+    --glass-strong: rgba(255, 255, 255, 0.72);
+    --glass-dark: rgba(28, 28, 30, 0.04);
+
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.03);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.04);
+    --shadow-lg: 0 12px 32px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
+
+    --radius-sm: 10px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+
+    /* Paleta de tags */
+    --tag-pink: #FFE2EC;     --tag-pink-ink: #B5285E;
+    --tag-lilac: #ECE4FB;    --tag-lilac-ink: #5B3FBF;
+    --tag-blue: #DCEBFF;     --tag-blue-ink: #1F5FAB;
+    --tag-mint: #D7F1E1;     --tag-mint-ink: #1F6E47;
+    --tag-amber: #FFEFC9;    --tag-amber-ink: #8A5A05;
+    --tag-peach: #FFE1D2;    --tag-peach-ink: #A8430E;
+    --tag-sky: #D8EEF4;      --tag-sky-ink: #185C70;
+    --tag-rose: #FCDDD9;     --tag-rose-ink: #9B2920;
+    --tag-sage: #E4ECDD;     --tag-sage-ink: #4A6233;
+    --tag-stone: #E5E1DA;    --tag-stone-ink: #4D4942;
+  }
+
+  /* Fonte Manrope + background base */
+  body {
+    font-family: 'Manrope', -apple-system, 'SF Pro Display', BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif;
+    background: var(--bg-a);
+    font-feature-settings: "cv11", "ss01";
+    color: var(--text);
+    min-height: 100vh;
+    position: relative;
+  }
+
+  /* Background gradiente com 4 manchas de cor */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 12% 8%, rgba(91, 91, 214, 0.18), transparent 38%),
+      radial-gradient(circle at 92% 18%, rgba(255, 180, 200, 0.22), transparent 42%),
+      radial-gradient(circle at 78% 96%, rgba(140, 188, 232, 0.20), transparent 45%),
+      radial-gradient(circle at 10% 88%, rgba(255, 220, 180, 0.20), transparent 40%),
+      linear-gradient(180deg, var(--bg-a), var(--bg-b));
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  /* Topbar com glass */
+  .topbar {
+    background: var(--glass-strong) !important;
+    backdrop-filter: blur(28px) saturate(140%);
+    -webkit-backdrop-filter: blur(28px) saturate(140%);
+    border-bottom: 1px solid var(--line, var(--border));
+  }
+  .brand .name { font-weight: 300; letter-spacing: -0.4px; }
+  .brand .sub { font-weight: 700; letter-spacing: 2px; color: var(--text-dim); }
+
+  .top-btn {
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    color: var(--text-dim);
+    font-weight: 600;
+  }
+  .top-btn:hover {
+    background: var(--glass-strong);
+    color: var(--text);
+  }
+
+  /* Tabs container com glass */
+  .tabs-wrap {
+    background: var(--glass-strong) !important;
+    backdrop-filter: blur(28px) saturate(140%);
+    -webkit-backdrop-filter: blur(28px) saturate(140%);
+    border-bottom: 1px solid var(--border);
+  }
+  .tabs {
+    background: var(--glass-dark);
+  }
+  .tab {
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+  .tab.active {
+    background: white;
+    color: var(--text);
+    box-shadow: var(--shadow-sm);
+  }
+  .tab.active .dot { opacity: 1; }
+
+  /* Cores das tab dots — paleta da rotina */
+  .tab[data-tab="dashboard"] .dot { background: var(--tag-lilac-ink); }
+  .tab[data-tab="a"] .dot { background: #B5A5E8; }
+  .tab[data-tab="b"] .dot { background: #E8A89A; border-radius: 3px; }
+  .tab[data-tab="c"] .dot { background: #9DC49A; }
+  .tab[data-tab="d"] .dot { background: #E89AAE; }
+  .tab[data-tab="cardio"] .dot { background: #9AC2D8; border-radius: 3px; }
+  .tab[data-tab="dicas"] .dot { background: #D8BC9A; }
+
+  /* Hero - tipografia Manrope light */
+  .hero h1 {
+    font-family: 'Manrope', sans-serif !important;
+    font-weight: 200 !important;
+    letter-spacing: -0.8px !important;
+  }
+  .hero .eyebrow,
+  .panel-eyebrow {
+    font-weight: 700 !important;
+    letter-spacing: 2px !important;
+    color: var(--accent) !important;
+  }
+  .hero .lead, .lead {
+    color: var(--text-dim);
+    font-weight: 400;
+  }
+
+  /* Treino cards (visão geral) */
+  .treino-card {
+    background: var(--glass) !important;
+    backdrop-filter: blur(24px) saturate(140%);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .treino-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Cards de exercícios */
+  .ex-card {
+    background: var(--glass) !important;
+    backdrop-filter: blur(24px) saturate(140%);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s ease;
+  }
+  .ex-card:hover { box-shadow: var(--shadow-md); }
+  .ex-card.done {
+    background: linear-gradient(180deg, rgba(91,91,214,0.06), rgba(91,91,214,0.02)) !important;
+    border-color: rgba(91,91,214,0.18) !important;
+  }
+  .ex-card.done .ex-name { color: var(--accent); }
+  .ex-num { color: var(--accent) !important; font-weight: 700; letter-spacing: 1.5px; }
+  .ex-name {
+    font-family: 'Manrope', sans-serif !important;
+    font-weight: 600;
+  }
+  .ex-chip {
+    background: var(--glass-dark) !important;
+    border-radius: 999px !important;
+    color: var(--text-soft) !important;
+    font-weight: 600;
+  }
+  .ex-chip.rest {
+    background: var(--tag-lilac) !important;
+    color: var(--tag-lilac-ink) !important;
+  }
+
+  /* Botão de check */
+  .ex-check-btn {
+    background: var(--glass-strong);
+    border-color: var(--border-strong);
+  }
+  .ex-check-btn:hover { border-color: var(--accent); }
+  .ex-check-btn.checked {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  /* Cardio cards */
+  .cardio-card {
+    background: var(--glass) !important;
+    backdrop-filter: blur(24px) saturate(140%);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--shadow-sm);
+  }
+  .cardio-card.sky { background: linear-gradient(135deg, rgba(216,238,244,0.6), rgba(255,255,255,0.5)) !important; }
+  .cardio-card.peach { background: linear-gradient(135deg, rgba(255,225,210,0.55), rgba(255,255,255,0.5)) !important; }
+  .cardio-card.lavender { background: linear-gradient(135deg, rgba(236,228,251,0.55), rgba(255,255,255,0.5)) !important; }
+  .cardio-card.sage { background: linear-gradient(135deg, rgba(228,236,221,0.55), rgba(255,255,255,0.5)) !important; }
+
+  /* Barra de cardio buttons */
+  .cardio-actions {
+    background: linear-gradient(135deg, rgba(216,238,244,0.4), rgba(220,235,255,0.3)) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-lg) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  .cardio-actions .cardio-actions-label {
+    color: var(--tag-sky-ink);
+    letter-spacing: 2px;
+  }
+  .cardio-btn {
+    background: var(--glass-strong);
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    color: var(--text-soft);
+    font-weight: 600;
+  }
+  .cardio-btn:hover { border-color: var(--tag-sky-ink); color: var(--text); }
+  .cardio-btn.checked {
+    background: var(--tag-sky-ink);
+    border-color: var(--tag-sky-ink);
+    color: white;
+  }
+
+  /* Dashboard cards */
+  .dash-card {
+    background: var(--glass) !important;
+    backdrop-filter: blur(24px) saturate(140%);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--shadow-md);
+  }
+  .dash-card-eyebrow {
+    color: var(--accent) !important;
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+  .dash-card-title {
+    font-family: 'Manrope', sans-serif !important;
+    font-weight: 200 !important;
+    letter-spacing: -0.4px;
+    color: var(--text) !important;
+  }
+  .dash-card-sub { color: var(--text-dim); }
+
+  /* Stat boxes */
+  .stat-box {
+    background: var(--glass-strong);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+  }
+  .stat-num {
+    font-family: 'Manrope', sans-serif !important;
+    font-weight: 300 !important;
+  }
+  .stat-label {
+    color: var(--text-dim);
+    font-weight: 700;
+    letter-spacing: 1.5px;
+  }
+
+  /* Streak */
+  .streak-num {
+    font-family: 'Manrope', sans-serif !important;
+    font-weight: 200 !important;
+    color: var(--accent) !important;
+  }
+  .streak-label { color: var(--text-dim); }
+
+  /* Week grid */
+  .day-cell {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-md);
+  }
+  .day-cell:hover { border-color: var(--accent) !important; }
+  .day-cell.today {
+    border-color: rgba(91,91,214,0.5) !important;
+    background: var(--glass-strong);
+  }
+  .day-cell.today .day-label { color: var(--accent); }
+  .day-cell.has-activity { background: var(--glass-strong); }
+  .day-cell .day-num {
+    font-family: 'Manrope', sans-serif !important;
+    font-weight: 400 !important;
+  }
+  .day-cell .day-label {
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+  }
+  /* Cores das badges */
+  .day-badge.A { background: var(--tag-lilac-ink); }
+  .day-badge.B { background: var(--tag-peach-ink); }
+  .day-badge.C { background: var(--tag-sage-ink); }
+  .day-badge.D { background: var(--tag-rose-ink); }
+  .day-badge.cardio { background: var(--tag-sky-ink); border-radius: 2px; }
+
+  /* Histórico de semanas */
+  .history-week {
+    background: var(--glass-strong);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+  }
+  .history-week.complete {
+    background: linear-gradient(135deg, rgba(91,91,214,0.08), rgba(91,91,214,0.02));
+    border-color: rgba(91,91,214,0.2);
+  }
+  .history-week.complete .hw-meta { color: var(--accent); }
+  .history-week .hw-bar.A { background: var(--tag-lilac-ink); }
+  .history-week .hw-bar.B { background: var(--tag-peach-ink); }
+  .history-week .hw-bar.C { background: var(--tag-sage-ink); }
+  .history-week .hw-bar.D { background: var(--tag-rose-ink); }
+  .history-week .hw-bar.cardio { background: var(--tag-sky-ink); border-radius: 2px; }
+  .history-empty {
+    background: var(--glass-strong);
+    border: 1px dashed var(--border-strong);
+    color: var(--text-dim);
+  }
+
+  /* Panel progress badge */
+  .panel-progress {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 999px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .panel-progress.complete {
+    background: var(--accent);
+    color: white;
+  }
+
+  /* Modal */
+  .day-modal {
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(40px) saturate(140%);
+    -webkit-backdrop-filter: blur(40px) saturate(140%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+  }
+  .day-modal h3 {
+    font-family: 'Manrope', sans-serif !important;
+    font-weight: 200 !important;
+    letter-spacing: -0.4px;
+  }
+  .day-modal .day-modal-sub {
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 1.5px;
+  }
+  .day-modal-section-label {
+    color: var(--text-dim);
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+  .day-modal-btn {
+    background: var(--glass-strong);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-weight: 600;
+  }
+  .day-modal-btn:hover { border-color: var(--accent); }
+  .day-modal-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+  .day-modal-btn.clear {
+    background: var(--glass-dark);
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+  .day-modal-cancel {
+    background: var(--glass-dark);
+    color: var(--text-soft);
+    border-radius: 999px;
+  }
+  .day-modal-save {
+    background: var(--accent);
+    color: white;
+    border-radius: 999px;
+  }
+
+  /* Dicas / princípios cards */
+  .principio-card,
+  .meta-card,
+  .panel-meta-line,
+  .freq-card {
+    background: var(--glass) !important;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-md) !important;
+  }
+
+  /* Toast */
+  .toast {
+    background: var(--text);
+    border-radius: 999px;
+    font-weight: 600;
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Footer */
+  .footer { color: var(--text-dim); }
+
+  /* Sticky topbar/tabs ajuste de cor */
+  @media (max-width: 720px) {
+    body::before {
+      background:
+        radial-gradient(circle at 12% 8%, rgba(91, 91, 214, 0.16), transparent 35%),
+        radial-gradient(circle at 92% 30%, rgba(255, 180, 200, 0.18), transparent 38%),
+        radial-gradient(circle at 78% 96%, rgba(140, 188, 232, 0.18), transparent 42%),
+        radial-gradient(circle at 10% 78%, rgba(255, 220, 180, 0.18), transparent 38%),
+        linear-gradient(180deg, var(--bg-a), var(--bg-b));
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -616,6 +1494,7 @@
 <div class="tabs-wrap">
   <div class="tabs">
     <button class="tab active" data-tab="semana"><span class="dot"></span> Visão geral</button>
+    <button class="tab" data-tab="dashboard"><span class="dot"></span> Dashboard</button>
     <button class="tab" data-tab="a"><span class="dot"></span> Treino A</button>
     <button class="tab" data-tab="b"><span class="dot"></span> Treino B</button>
     <button class="tab" data-tab="c"><span class="dot"></span> Treino C</button>
@@ -704,6 +1583,68 @@
   </section>
 
   <!-- ==================== TREINO A ==================== -->
+
+  <!-- ==================== DASHBOARD ==================== -->
+  <section class="panel" id="panel-dashboard">
+    <div class="hero">
+      <div class="panel-eyebrow-row">
+        <div class="panel-eyebrow">PROGRESSO</div>
+      </div>
+      <h1>Seu progresso</h1>
+      <p class="lead" style="margin-top: 12px;">Acompanhe os treinos marcados, totais da semana e histórico. Clica em qualquer dia pra editar.</p>
+    </div>
+
+    <div class="dash-grid">
+
+      <div class="dash-card full">
+        <div class="dash-card-eyebrow">ESTA SEMANA</div>
+        <div class="dash-card-title" id="dash-week-title">Semana atual</div>
+        <div class="dash-card-sub" id="dash-week-range">—</div>
+        <div class="week-grid" id="dash-week-grid"></div>
+        <div class="stat-row">
+          <div class="stat-box">
+            <div class="stat-num"><span id="dash-stat-musc">0</span><span class="stat-total">/4</span></div>
+            <div class="stat-label">MUSCULAÇÃO</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num"><span id="dash-stat-cardio">0</span><span class="stat-total">/2</span></div>
+            <div class="stat-label">CARDIO</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num"><span id="dash-stat-active">0</span><span class="stat-total">/7</span></div>
+            <div class="stat-label">DIAS ATIVOS</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-card">
+        <div class="dash-card-eyebrow">SEQUÊNCIA</div>
+        <div class="streak-display">
+          <span class="streak-num" id="dash-streak-num">0</span>
+          <span class="streak-label" id="dash-streak-label">semanas seguidas batendo a meta</span>
+        </div>
+        <div class="dash-card-sub" style="margin-top:12px;">Meta semanal: 4 musculações + 2 cardios.</div>
+      </div>
+
+      <div class="dash-card">
+        <div class="dash-card-eyebrow">RESUMO GERAL</div>
+        <div class="streak-display">
+          <span class="streak-num" id="dash-total-num">0</span>
+          <span class="streak-label">atividades feitas no total</span>
+        </div>
+        <div class="dash-card-sub" style="margin-top:12px;" id="dash-since">Desde que começou a marcar.</div>
+      </div>
+
+      <div class="dash-card full">
+        <div class="dash-card-eyebrow">HISTÓRICO</div>
+        <div class="dash-card-title">Últimas semanas</div>
+        <div class="dash-card-sub">Cada bolinha é uma atividade feita. A, B, C, D são os treinos e o azul é cardio.</div>
+        <div class="history-list" id="dash-history-list"></div>
+      </div>
+
+    </div>
+  </section>
+
   <section class="panel" id="panel-a">
     <div class="hero">
       <div class="panel-eyebrow-row">
@@ -1542,6 +2483,13 @@
       <p class="lead" style="margin-top: 12px;">2 sessões por semana, longe dos treinos pesados. Foco em queima calórica sem prejudicar a recuperação muscular.</p>
     </div>
 
+    <div class="cardio-actions">
+      <div class="cardio-actions-label">MARCAR CARDIO FEITO HOJE</div>
+      <button class="cardio-btn" data-cardio-type="LISS">LISS · Caminhada inclinada</button>
+      <button class="cardio-btn" data-cardio-type="HIIT">HIIT variado</button>
+      <button class="cardio-btn" data-cardio-type="BIKE">Bike / Elíptico</button>
+    </div>
+
     <div class="cardio-grid">
       <div class="cardio-card sky">
         <div class="duration">QUARTA · 40-45 MIN</div>
@@ -1605,6 +2553,42 @@
 
 </div>
 
+<!-- Modal de edição de dia -->
+<div class="day-modal-overlay" id="day-modal-overlay">
+  <div class="day-modal">
+    <h3 id="day-modal-title">Editar dia</h3>
+    <div class="day-modal-sub" id="day-modal-date">—</div>
+
+    <div class="day-modal-section">
+      <div class="day-modal-section-label">MUSCULAÇÃO</div>
+      <div class="day-modal-options">
+        <button class="day-modal-btn" data-edit-workout="A">Treino A</button>
+        <button class="day-modal-btn" data-edit-workout="B">Treino B</button>
+        <button class="day-modal-btn" data-edit-workout="C">Treino C</button>
+        <button class="day-modal-btn" data-edit-workout="D">Treino D</button>
+        <button class="day-modal-btn clear" data-edit-workout="">Sem musculação</button>
+      </div>
+    </div>
+
+    <div class="day-modal-section">
+      <div class="day-modal-section-label">CARDIO</div>
+      <div class="day-modal-options three">
+        <button class="day-modal-btn" data-edit-cardio="LISS">LISS</button>
+        <button class="day-modal-btn" data-edit-cardio="HIIT">HIIT</button>
+        <button class="day-modal-btn" data-edit-cardio="BIKE">Bike</button>
+        <button class="day-modal-btn clear" data-edit-cardio="">Sem cardio</button>
+      </div>
+    </div>
+
+    <div class="day-modal-footer">
+      <button class="day-modal-cancel" id="day-modal-cancel">Cancelar</button>
+      <button class="day-modal-save" id="day-modal-save">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">—</div>
+
 <script>
   // Tab navigation
   function switchTab(target) {
@@ -1623,7 +2607,485 @@
   document.querySelectorAll('.treino-card').forEach(card => {
     card.addEventListener('click', () => switchTab(card.dataset.go));
   });
+
+
+  // ============================================
+  // ROTINA CAROL - tracking de treinos
+  // ============================================
+  const STORAGE_KEY = 'treinoCarol_v1';
+
+  function todayISO() {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + day;
+  }
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch (e) {}
+    return { v: 1, today: todayISO(), todayChecks: {}, todayCardio: null, history: [] };
+  }
+
+  function saveState() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  let state = loadState();
+
+  // Detecta virada de dia e arquiva o que foi feito ontem
+  function rolloverIfNeeded() {
+    const today = todayISO();
+    if (state.today === today) return;
+
+    // Arquiva o dia anterior se teve alguma atividade
+    const counts = countWorkoutsToday();
+    let archivedWorkout = null;
+    if (counts.A === 6) archivedWorkout = 'A';
+    else if (counts.B === 6) archivedWorkout = 'B';
+    else if (counts.C === 6) archivedWorkout = 'C';
+    else if (counts.D === 6) archivedWorkout = 'D';
+
+    if (archivedWorkout || state.todayCardio) {
+      // Substitui entrada do mesmo dia se já existir
+      state.history = state.history.filter(h => h.date !== state.today);
+      state.history.push({
+        date: state.today,
+        workout: archivedWorkout,
+        cardio: state.todayCardio
+      });
+    }
+
+    state.today = today;
+    state.todayChecks = {};
+    state.todayCardio = null;
+    saveState();
+  }
+
+  function countWorkoutsToday() {
+    const c = { A: 0, B: 0, C: 0, D: 0 };
+    Object.keys(state.todayChecks).forEach(id => {
+      if (state.todayChecks[id]) {
+        const letter = id[0];
+        if (c[letter] !== undefined) c[letter]++;
+      }
+    });
+    return c;
+  }
+
+  // Atribui IDs e adiciona botão de check em cada ex-card
+  function setupExerciseChecks() {
+    ['a', 'b', 'c', 'd'].forEach(letter => {
+      const panel = document.getElementById('panel-' + letter);
+      if (!panel) return;
+      const cards = panel.querySelectorAll('.ex-card');
+      cards.forEach((card, i) => {
+        const exId = letter.toUpperCase() + (i + 1);
+        card.dataset.exId = exId;
+        const btn = document.createElement('button');
+        btn.className = 'ex-check-btn';
+        btn.setAttribute('aria-label', 'Marcar exercício feito');
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleCheck(exId, card, btn);
+        });
+        card.appendChild(btn);
+      });
+    });
+    refreshCheckUI();
+    refreshPanelProgress();
+  }
+
+  function toggleCheck(exId, card, btn) {
+    rolloverIfNeeded();
+    const next = !state.todayChecks[exId];
+    state.todayChecks[exId] = next;
+    if (!next) delete state.todayChecks[exId];
+    saveState();
+    btn.classList.toggle('checked', next);
+    card.classList.toggle('done', next);
+    refreshPanelProgress();
+
+    const letter = exId[0];
+    const count = countWorkoutsToday()[letter];
+    if (next && count === 6) {
+      showToast('Treino ' + letter + ' completo! ✓');
+    }
+    renderDashboard();
+  }
+
+  function refreshCheckUI() {
+    document.querySelectorAll('.ex-card').forEach(card => {
+      const id = card.dataset.exId;
+      if (!id) return;
+      const isChecked = !!state.todayChecks[id];
+      const btn = card.querySelector('.ex-check-btn');
+      if (btn) btn.classList.toggle('checked', isChecked);
+      card.classList.toggle('done', isChecked);
+    });
+  }
+
+  function refreshPanelProgress() {
+    const counts = countWorkoutsToday();
+    ['A', 'B', 'C', 'D'].forEach(letter => {
+      const panel = document.getElementById('panel-' + letter.toLowerCase());
+      if (!panel) return;
+      let badge = panel.querySelector('.panel-progress');
+      if (!badge) {
+        const row = panel.querySelector('.panel-eyebrow-row');
+        if (!row) return;
+        badge = document.createElement('div');
+        badge.className = 'panel-progress';
+        badge.innerHTML = '<span class="progress-dot"></span><span class="progress-text"></span>';
+        row.appendChild(badge);
+      }
+      const count = counts[letter];
+      badge.querySelector('.progress-text').textContent = count + ' / 6';
+      badge.classList.toggle('complete', count === 6);
+    });
+  }
+
+  // Botões de cardio
+  function setupCardioButtons() {
+    document.querySelectorAll('.cardio-btn[data-cardio-type]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        rolloverIfNeeded();
+        const type = btn.dataset.cardioType;
+        if (state.todayCardio === type) {
+          state.todayCardio = null;
+        } else {
+          state.todayCardio = type;
+        }
+        saveState();
+        refreshCardioUI();
+        showToast(state.todayCardio ? 'Cardio ' + state.todayCardio + ' marcado!' : 'Cardio desmarcado');
+        renderDashboard();
+      });
+    });
+    refreshCardioUI();
+  }
+
+  function refreshCardioUI() {
+    document.querySelectorAll('.cardio-btn[data-cardio-type]').forEach(btn => {
+      btn.classList.toggle('checked', state.todayCardio === btn.dataset.cardioType);
+    });
+  }
+
+  // ============================================
+  // DASHBOARD
+  // ============================================
+  const DAY_LABELS = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB', 'DOM'];
+  const MONTHS = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+
+  function dateFromISO(iso) {
+    const [y, m, d] = iso.split('-').map(Number);
+    return new Date(y, m - 1, d);
+  }
+
+  function isoFromDate(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + day;
+  }
+
+  // Segunda da semana de uma data (segunda = início)
+  function weekStart(date) {
+    const d = new Date(date);
+    const day = d.getDay(); // 0=dom..6=sab
+    const diff = day === 0 ? -6 : 1 - day;
+    d.setDate(d.getDate() + diff);
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }
+
+  function weekDays(startDate) {
+    const days = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(startDate);
+      d.setDate(d.getDate() + i);
+      days.push(d);
+    }
+    return days;
+  }
+
+  // Pega entrada do dia (do today ou do history)
+  function getDayEntry(iso) {
+    if (iso === state.today) {
+      const counts = countWorkoutsToday();
+      let workout = null;
+      ['A', 'B', 'C', 'D'].forEach(l => { if (counts[l] === 6) workout = l; });
+      return { date: iso, workout: workout, cardio: state.todayCardio, partial: counts };
+    }
+    return state.history.find(h => h.date === iso) || null;
+  }
+
+  function setDayEntry(iso, workout, cardio) {
+    if (iso === state.today) {
+      // Edita o dia de hoje
+      state.todayCardio = cardio || null;
+      // Limpa checks dos outros treinos e marca todos do escolhido
+      state.todayChecks = {};
+      if (workout) {
+        for (let i = 1; i <= 6; i++) state.todayChecks[workout + i] = true;
+      }
+      saveState();
+      refreshCheckUI();
+      refreshPanelProgress();
+      refreshCardioUI();
+      return;
+    }
+    // History
+    state.history = state.history.filter(h => h.date !== iso);
+    if (workout || cardio) {
+      state.history.push({ date: iso, workout: workout || null, cardio: cardio || null });
+    }
+    saveState();
+  }
+
+  function renderDashboard() {
+    rolloverIfNeeded();
+    const start = weekStart(new Date());
+    const days = weekDays(start);
+    const end = days[6];
+
+    document.getElementById('dash-week-range').textContent =
+      start.getDate() + ' ' + MONTHS[start.getMonth()] + ' — ' + end.getDate() + ' ' + MONTHS[end.getMonth()];
+
+    // Grid da semana
+    const grid = document.getElementById('dash-week-grid');
+    grid.innerHTML = '';
+    const todayIso = todayISO();
+    let muscCount = 0, cardioCount = 0, activeCount = 0;
+
+    days.forEach((d, i) => {
+      const iso = isoFromDate(d);
+      const entry = getDayEntry(iso);
+      const cell = document.createElement('div');
+      cell.className = 'day-cell';
+      if (iso === todayIso) cell.classList.add('today');
+      cell.dataset.iso = iso;
+
+      let badges = '';
+      let hasAct = false;
+      if (entry) {
+        if (entry.workout) { badges += '<span class="day-badge ' + entry.workout + '"></span>'; muscCount++; hasAct = true; }
+        if (entry.cardio) { badges += '<span class="day-badge cardio"></span>'; cardioCount++; hasAct = true; }
+      }
+      if (hasAct) cell.classList.add('has-activity');
+      if (hasAct) activeCount++;
+
+      cell.innerHTML =
+        '<div class="day-label">' + DAY_LABELS[i] + '</div>' +
+        '<div class="day-num">' + d.getDate() + '</div>' +
+        '<div class="day-badges">' + badges + '</div>';
+
+      cell.addEventListener('click', () => openDayModal(iso));
+      grid.appendChild(cell);
+    });
+
+    document.getElementById('dash-stat-musc').textContent = muscCount;
+    document.getElementById('dash-stat-cardio').textContent = cardioCount;
+    document.getElementById('dash-stat-active').textContent = activeCount;
+
+    renderStreak();
+    renderHistory();
+    renderTotal();
+  }
+
+  function renderStreak() {
+    // Vai voltando semana a semana até encontrar uma incompleta
+    let streak = 0;
+    let cursor = weekStart(new Date());
+    cursor.setDate(cursor.getDate() - 7); // começa pela semana passada
+    while (true) {
+      const m = weekMetrics(cursor);
+      if (m.musc >= 4 && m.cardio >= 2) {
+        streak++;
+        cursor.setDate(cursor.getDate() - 7);
+      } else {
+        break;
+      }
+      if (streak > 200) break;
+    }
+    // Adiciona a semana atual se já bateu meta
+    const cur = weekMetrics(weekStart(new Date()));
+    if (cur.musc >= 4 && cur.cardio >= 2) streak++;
+
+    document.getElementById('dash-streak-num').textContent = streak;
+    const lbl = streak === 1 ? 'semana batendo a meta' : 'semanas seguidas batendo a meta';
+    document.getElementById('dash-streak-label').textContent = lbl;
+  }
+
+  function weekMetrics(startDate) {
+    const days = weekDays(startDate);
+    let musc = 0, cardio = 0;
+    days.forEach(d => {
+      const entry = getDayEntry(isoFromDate(d));
+      if (entry && entry.workout) musc++;
+      if (entry && entry.cardio) cardio++;
+    });
+    return { musc, cardio };
+  }
+
+  function renderTotal() {
+    let total = 0;
+    state.history.forEach(h => {
+      if (h.workout) total++;
+      if (h.cardio) total++;
+    });
+    // Mais o dia de hoje
+    const counts = countWorkoutsToday();
+    ['A','B','C','D'].forEach(l => { if (counts[l] === 6) total++; });
+    if (state.todayCardio) total++;
+
+    document.getElementById('dash-total-num').textContent = total;
+
+    // Data desde que começou
+    let earliest = state.today;
+    state.history.forEach(h => { if (h.date < earliest) earliest = h.date; });
+    if (state.history.length === 0 && Object.keys(state.todayChecks).length === 0 && !state.todayCardio) {
+      document.getElementById('dash-since').textContent = 'Ainda sem registros. Marca seu primeiro exercício pra começar!';
+    } else {
+      const ed = dateFromISO(earliest);
+      document.getElementById('dash-since').textContent = 'Desde ' + ed.getDate() + ' de ' + MONTHS[ed.getMonth()] + ' de ' + ed.getFullYear() + '.';
+    }
+  }
+
+  function renderHistory() {
+    const list = document.getElementById('dash-history-list');
+    list.innerHTML = '';
+    const weeksToShow = 6;
+    const curWeekStart = weekStart(new Date());
+
+    let anyData = false;
+    for (let i = 1; i <= weeksToShow; i++) {
+      const ws = new Date(curWeekStart);
+      ws.setDate(ws.getDate() - 7 * i);
+      const days = weekDays(ws);
+      const items = [];
+      let musc = 0, cardio = 0;
+      days.forEach(d => {
+        const entry = getDayEntry(isoFromDate(d));
+        if (entry && entry.workout) { items.push('<span class="hw-bar ' + entry.workout + '"></span>'); musc++; }
+        if (entry && entry.cardio) { items.push('<span class="hw-bar cardio"></span>'); cardio++; }
+      });
+      if (items.length === 0) continue;
+      anyData = true;
+      const we = new Date(ws); we.setDate(we.getDate() + 6);
+      const label = ws.getDate() + '/' + (ws.getMonth() + 1) + ' a ' + we.getDate() + '/' + (we.getMonth() + 1);
+      const complete = musc >= 4 && cardio >= 2;
+
+      const row = document.createElement('div');
+      row.className = 'history-week' + (complete ? ' complete' : '');
+      row.innerHTML =
+        '<div class="hw-label">' + label + '</div>' +
+        '<div class="hw-bars">' + items.join('') + '</div>' +
+        '<div class="hw-meta">' + musc + 'M · ' + cardio + 'C</div>';
+      list.appendChild(row);
+    }
+
+    if (!anyData) {
+      list.innerHTML = '<div class="history-empty">Ainda não tem semanas anteriores registradas. Conforme você for treinando, elas aparecem aqui.</div>';
+    }
+  }
+
+  // ============================================
+  // Modal de edição de dia
+  // ============================================
+  let editingDay = null;
+  let editingWorkout = null;
+  let editingCardio = null;
+
+  function openDayModal(iso) {
+    editingDay = iso;
+    const entry = getDayEntry(iso);
+    editingWorkout = entry && entry.workout ? entry.workout : '';
+    editingCardio = entry && entry.cardio ? entry.cardio : '';
+
+    document.getElementById('day-modal-title').textContent = iso === todayISO() ? 'Hoje' : 'Editar dia';
+    const d = dateFromISO(iso);
+    document.getElementById('day-modal-date').textContent =
+      DAY_LABELS[(d.getDay() + 6) % 7] + ' · ' + d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear();
+
+    refreshModalButtons();
+    document.getElementById('day-modal-overlay').classList.add('open');
+  }
+
+  function refreshModalButtons() {
+    document.querySelectorAll('[data-edit-workout]').forEach(b => {
+      b.classList.toggle('active', b.dataset.editWorkout === editingWorkout);
+    });
+    document.querySelectorAll('[data-edit-cardio]').forEach(b => {
+      b.classList.toggle('active', b.dataset.editCardio === editingCardio);
+    });
+  }
+
+  function closeDayModal() {
+    document.getElementById('day-modal-overlay').classList.remove('open');
+  }
+
+  document.querySelectorAll('[data-edit-workout]').forEach(b => {
+    b.addEventListener('click', () => {
+      editingWorkout = b.dataset.editWorkout;
+      refreshModalButtons();
+    });
+  });
+  document.querySelectorAll('[data-edit-cardio]').forEach(b => {
+    b.addEventListener('click', () => {
+      editingCardio = b.dataset.editCardio;
+      refreshModalButtons();
+    });
+  });
+
+  document.getElementById('day-modal-cancel').addEventListener('click', closeDayModal);
+  document.getElementById('day-modal-overlay').addEventListener('click', (e) => {
+    if (e.target.id === 'day-modal-overlay') closeDayModal();
+  });
+  document.getElementById('day-modal-save').addEventListener('click', () => {
+    setDayEntry(editingDay, editingWorkout, editingCardio);
+    closeDayModal();
+    renderDashboard();
+    showToast('Dia atualizado!');
+  });
+
+  // ============================================
+  // Toast
+  // ============================================
+  let toastTimer = null;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
+  }
+
+  // ============================================
+  // INIT
+  // ============================================
+  rolloverIfNeeded();
+  setupExerciseChecks();
+  setupCardioButtons();
+  renderDashboard();
+
+  // Re-render dashboard a cada minuto pra pegar mudança de data
+  setInterval(() => {
+    const before = state.today;
+    rolloverIfNeeded();
+    if (state.today !== before) {
+      refreshCheckUI();
+      refreshPanelProgress();
+      refreshCardioUI();
+      renderDashboard();
+    }
+  }, 60000);
+
 </script>
+
 
 </body>
 </html>
