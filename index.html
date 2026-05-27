@@ -1489,6 +1489,220 @@
     font-size: 16px !important;
   }
 
+
+
+  /* === FIX mobile: dashboard week grid estourava === */
+  .week-grid {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+  .dash-card { overflow: hidden; }
+  .day-cell { min-width: 0; }
+
+  @media (max-width: 720px) {
+    .dash-card { padding: 18px 14px; }
+    .week-grid { gap: 4px; margin-top: 14px; }
+    .day-cell {
+      aspect-ratio: 1 / 1.35;
+      padding: 4px 2px;
+    }
+    .day-cell .day-label { font-size: 9px; letter-spacing: 0.3px; margin-bottom: 2px; }
+    .day-cell .day-num { font-size: 15px; }
+    .day-cell .day-badges { gap: 2px; margin-top: 4px; }
+    .day-badge { width: 6px; height: 6px; }
+
+    .stat-row { gap: 8px; }
+    .stat-box { padding: 12px 6px; }
+    .stat-box .stat-num { font-size: 24px; }
+    .stat-box .stat-num .stat-total { font-size: 13px; }
+    .stat-box .stat-label { font-size: 9px; letter-spacing: 0.8px; }
+
+    .streak-num { font-size: 44px; }
+    .streak-label { font-size: 12px; }
+  }
+
+  @media (max-width: 380px) {
+    .dash-card { padding: 16px 10px; }
+    .week-grid { gap: 3px; }
+    .day-cell { padding: 3px 1px; aspect-ratio: 1 / 1.45; }
+    .day-cell .day-label { font-size: 8px; }
+    .day-cell .day-num { font-size: 13px; }
+  }
+
+
+
+  /* === Cardio: botão Outro + input customizado === */
+  .cardio-actions {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .cardio-buttons-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+  }
+  .cardio-buttons-row .cardio-btn {
+    flex: 1 1 calc(50% - 4px);
+    min-width: 0;
+  }
+  @media (min-width: 720px) {
+    .cardio-buttons-row .cardio-btn {
+      flex: 1 1 calc(25% - 8px);
+    }
+  }
+  .cardio-custom-input {
+    width: 100%;
+    margin-top: 4px;
+    padding: 12px 18px;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 999px;
+    background: var(--glass-strong);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text);
+    outline: none;
+    display: none;
+    transition: border-color 0.18s;
+  }
+  .cardio-custom-input.visible { display: block; }
+  .cardio-custom-input:focus { border-color: var(--accent); }
+  .cardio-custom-input::placeholder { color: var(--text-faint); }
+
+  .cardio-btn[data-cardio-type="OTHER"].checked {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  /* === Domingo OFF === */
+  .day-cell.day-off {
+    background: rgba(255,255,255,0.3);
+    border-style: dashed;
+  }
+  .day-cell.day-off .day-label,
+  .day-cell.day-off .day-num {
+    opacity: 0.55;
+  }
+  .day-cell .day-off-label {
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text-faint);
+    margin-top: 4px;
+    text-transform: uppercase;
+  }
+  @media (max-width: 380px) {
+    .day-cell .day-off-label { font-size: 7px; margin-top: 2px; }
+  }
+
+  /* Tooltip simples para badge cardio custom */
+  .day-badge[data-tooltip] { position: relative; cursor: help; }
+  .day-badge.other { background: var(--accent) !important; border-radius: 2px; }
+  .history-week .hw-bar.other { background: var(--accent) !important; border-radius: 4px; }
+
+  /* Resumo de cardio custom no histórico */
+  .history-custom-notes {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: var(--glass-strong);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text-soft);
+    line-height: 1.5;
+  }
+  .history-custom-notes-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .history-custom-notes ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .history-custom-notes li {
+    padding: 4px 0;
+    border-top: 1px solid var(--border);
+  }
+  .history-custom-notes li:first-child { border-top: none; }
+  .history-custom-notes .when {
+    font-weight: 700;
+    color: var(--accent);
+    margin-right: 8px;
+  }
+
+  /* Modal: novo botão OUTRO */
+  .day-modal-cardio-custom-input {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 13px;
+    background: white;
+    outline: none;
+    display: none;
+  }
+  .day-modal-cardio-custom-input.visible { display: block; }
+  .day-modal-cardio-custom-input:focus { border-color: var(--accent); }
+
+
+
+  /* Cardio note input — sempre visível */
+  .cardio-note-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    margin-top: 4px;
+  }
+  .cardio-note-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+  }
+  .cardio-note-input {
+    width: 100%;
+    padding: 12px 18px;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 999px;
+    background: var(--glass-strong);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.18s;
+  }
+  .cardio-note-input:focus { border-color: var(--accent); }
+  .cardio-note-input::placeholder { color: var(--text-faint); }
+  .cardio-note-input.has-text {
+    background: white;
+    border-color: var(--accent);
+  }
+
+  /* Esconde o input antigo customInput pra OTHER, agora é redundante */
+  .cardio-custom-input { display: none !important; }
+
+  /* Modal: input de anotação sempre visível também */
+  .day-modal-note-wrap {
+    margin-top: 10px;
+  }
+  .day-modal-note-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+
 </style>
 </head>
 <body>
@@ -2499,9 +2713,16 @@
 
     <div class="cardio-actions">
       <div class="cardio-actions-label">MARCAR CARDIO FEITO HOJE</div>
-      <button class="cardio-btn" data-cardio-type="LISS">LISS · Caminhada inclinada</button>
-      <button class="cardio-btn" data-cardio-type="HIIT">HIIT variado</button>
-      <button class="cardio-btn" data-cardio-type="BIKE">Bike / Elíptico</button>
+      <div class="cardio-buttons-row">
+        <button class="cardio-btn" data-cardio-type="LISS">LISS · Caminhada</button>
+        <button class="cardio-btn" data-cardio-type="HIIT">HIIT variado</button>
+        <button class="cardio-btn" data-cardio-type="BIKE">Bike / Elíptico</button>
+        <button class="cardio-btn" data-cardio-type="OTHER">+ Outro</button>
+      </div>
+      <div class="cardio-note-wrap">
+        <label class="cardio-note-label" for="cardio-note-input">ANOTAÇÃO (opcional)</label>
+        <input type="text" class="cardio-note-input" id="cardio-note-input" placeholder="Ex: 30min, ritmo médio, com playlist nova" maxlength="80">
+      </div>
     </div>
 
     <div class="cardio-grid">
@@ -2521,9 +2742,9 @@
         <div class="desc">30-40min em ritmo constante. Bom pra dias que as pernas estão cansadas. <strong>Mais leve nas articulações</strong>.</div>
       </div>
       <div class="cardio-card sage">
-        <div class="duration">ROTAÇÃO</div>
-        <div class="name">Como organizar</div>
-        <div class="desc"><strong>LISS na quarta</strong> entre B e C, <strong>HIIT no sábado</strong> longe de tudo. Variar entre as opções pra não enjoar.</div>
+        <div class="duration">ROTAÇÃO · 7 DIAS</div>
+        <div class="name">Como organizar a semana</div>
+        <div class="desc"><strong>Seg/Ter:</strong> Treino A e B · <strong>Quarta:</strong> cardio (LISS) · <strong>Qui/Sex:</strong> Treino C e D · <strong>Sábado:</strong> cardio (HIIT) · <strong>Domingo:</strong> livre, sem culpa.</div>
       </div>
     </div>
   </section>
@@ -2586,11 +2807,16 @@
 
     <div class="day-modal-section">
       <div class="day-modal-section-label">CARDIO</div>
-      <div class="day-modal-options three">
+      <div class="day-modal-options">
         <button class="day-modal-btn" data-edit-cardio="LISS">LISS</button>
         <button class="day-modal-btn" data-edit-cardio="HIIT">HIIT</button>
         <button class="day-modal-btn" data-edit-cardio="BIKE">Bike</button>
+        <button class="day-modal-btn" data-edit-cardio="OTHER">+ Outro</button>
         <button class="day-modal-btn clear" data-edit-cardio="">Sem cardio</button>
+      </div>
+      <div class="day-modal-note-wrap">
+        <div class="day-modal-note-label">ANOTAÇÃO DO CARDIO (opcional)</div>
+        <input type="text" class="day-modal-cardio-custom-input visible" id="day-modal-cardio-custom-input" placeholder="Ex: 30min, ritmo médio" maxlength="80" style="display: block;">
       </div>
     </div>
 
@@ -2641,7 +2867,7 @@
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) return JSON.parse(raw);
     } catch (e) {}
-    return { v: 1, today: todayISO(), todayChecks: {}, todayCardio: null, history: [] };
+    return { v: 3, today: todayISO(), todayChecks: {}, todayCardio: null, todayCardioNote: '', history: [] };
   }
 
   function saveState() {
@@ -2649,6 +2875,20 @@
   }
 
   let state = loadState();
+  // Migração: campos antigos viram todayCardioNote
+  if (typeof state.todayCardioNote !== 'string') {
+    state.todayCardioNote = state.todayCardioCustom || '';
+  }
+  delete state.todayCardioCustom;
+  // Migra history: cardioCustom -> cardioNote
+  if (Array.isArray(state.history)) {
+    state.history.forEach(h => {
+      if (typeof h.cardioNote !== 'string') {
+        h.cardioNote = h.cardioCustom || '';
+      }
+      delete h.cardioCustom;
+    });
+  }
 
   // Detecta virada de dia e arquiva o que foi feito ontem
   function rolloverIfNeeded() {
@@ -2669,13 +2909,15 @@
       state.history.push({
         date: state.today,
         workout: archivedWorkout,
-        cardio: state.todayCardio
+        cardio: state.todayCardio,
+        cardioNote: state.todayCardioNote || ''
       });
     }
 
     state.today = today;
     state.todayChecks = {};
     state.todayCardio = null;
+    state.todayCardioNote = '';
     saveState();
   }
 
@@ -2775,17 +3017,46 @@
         }
         saveState();
         refreshCardioUI();
-        showToast(state.todayCardio ? 'Cardio ' + state.todayCardio + ' marcado!' : 'Cardio desmarcado');
+        showToast(state.todayCardio ? cardioLabel(state.todayCardio) + ' marcado!' : 'Cardio desmarcado');
         renderDashboard();
       });
     });
+
+    // Input de anotação (sempre visível, funciona pra qualquer tipo)
+    const note = document.getElementById('cardio-note-input');
+    if (note) {
+      note.addEventListener('input', () => {
+        state.todayCardioNote = note.value.slice(0, 80);
+        saveState();
+        note.classList.toggle('has-text', !!state.todayCardioNote);
+        renderDashboard();
+      });
+      note.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); note.blur(); showToast('Anotação salva!'); }
+      });
+    }
+
     refreshCardioUI();
+  }
+
+  function cardioLabel(type) {
+    if (type === 'LISS') return 'Cardio LISS';
+    if (type === 'HIIT') return 'Cardio HIIT';
+    if (type === 'BIKE') return 'Bike/Elíptico';
+    if (type === 'OTHER') return 'Cardio rápido';
+    return 'Cardio';
   }
 
   function refreshCardioUI() {
     document.querySelectorAll('.cardio-btn[data-cardio-type]').forEach(btn => {
       btn.classList.toggle('checked', state.todayCardio === btn.dataset.cardioType);
     });
+    const note = document.getElementById('cardio-note-input');
+    if (note) {
+      const v = state.todayCardioNote || '';
+      if (note.value !== v) note.value = v;
+      note.classList.toggle('has-text', !!v);
+    }
   }
 
   // ============================================
@@ -2832,16 +3103,17 @@
       const counts = countWorkoutsToday();
       let workout = null;
       ['A', 'B', 'C', 'D'].forEach(l => { if (counts[l] === 6) workout = l; });
-      return { date: iso, workout: workout, cardio: state.todayCardio, partial: counts };
+      return { date: iso, workout: workout, cardio: state.todayCardio, cardioNote: state.todayCardioNote || '', partial: counts };
     }
-    return state.history.find(h => h.date === iso) || null;
+    const h = state.history.find(h => h.date === iso);
+    if (h && !h.cardioNote && h.cardioCustom) h.cardioNote = h.cardioCustom;
+    return h || null;
   }
 
-  function setDayEntry(iso, workout, cardio) {
+  function setDayEntry(iso, workout, cardio, cardioNote) {
     if (iso === state.today) {
-      // Edita o dia de hoje
       state.todayCardio = cardio || null;
-      // Limpa checks dos outros treinos e marca todos do escolhido
+      state.todayCardioNote = cardioNote || '';
       state.todayChecks = {};
       if (workout) {
         for (let i = 1; i <= 6; i++) state.todayChecks[workout + i] = true;
@@ -2852,10 +3124,14 @@
       refreshCardioUI();
       return;
     }
-    // History
     state.history = state.history.filter(h => h.date !== iso);
-    if (workout || cardio) {
-      state.history.push({ date: iso, workout: workout || null, cardio: cardio || null });
+    if (workout || cardio || cardioNote) {
+      state.history.push({
+        date: iso,
+        workout: workout || null,
+        cardio: cardio || null,
+        cardioNote: cardioNote || ''
+      });
     }
     saveState();
   }
@@ -2882,20 +3158,32 @@
       cell.className = 'day-cell';
       if (iso === todayIso) cell.classList.add('today');
       cell.dataset.iso = iso;
+      const isSunday = i === 6;
 
       let badges = '';
       let hasAct = false;
       if (entry) {
         if (entry.workout) { badges += '<span class="day-badge ' + entry.workout + '"></span>'; muscCount++; hasAct = true; }
-        if (entry.cardio) { badges += '<span class="day-badge cardio"></span>'; cardioCount++; hasAct = true; }
+        if (entry.cardio) {
+          const cardioClass = entry.cardio === 'OTHER' ? 'cardio other' : 'cardio';
+          const noteText = entry.cardioNote || '';
+          const tip = noteText ? ' title="' + noteText.replace(/"/g,'') + '"' : '';
+          badges += '<span class="day-badge ' + cardioClass + '"' + tip + '></span>';
+          cardioCount++; hasAct = true;
+        }
       }
       if (hasAct) cell.classList.add('has-activity');
       if (hasAct) activeCount++;
+      if (isSunday && !hasAct) cell.classList.add('day-off');
+
+      let offLabel = '';
+      if (isSunday && !hasAct) offLabel = '<div class="day-off-label">livre</div>';
 
       cell.innerHTML =
         '<div class="day-label">' + DAY_LABELS[i] + '</div>' +
         '<div class="day-num">' + d.getDate() + '</div>' +
-        '<div class="day-badges">' + badges + '</div>';
+        '<div class="day-badges">' + badges + '</div>' +
+        offLabel;
 
       cell.addEventListener('click', () => openDayModal(iso));
       grid.appendChild(cell);
@@ -2976,6 +3264,7 @@
     const curWeekStart = weekStart(new Date());
 
     let anyData = false;
+    const customNotes = [];
     for (let i = 1; i <= weeksToShow; i++) {
       const ws = new Date(curWeekStart);
       ws.setDate(ws.getDate() - 7 * i);
@@ -2985,7 +3274,15 @@
       days.forEach(d => {
         const entry = getDayEntry(isoFromDate(d));
         if (entry && entry.workout) { items.push('<span class="hw-bar ' + entry.workout + '"></span>'); musc++; }
-        if (entry && entry.cardio) { items.push('<span class="hw-bar cardio"></span>'); cardio++; }
+        if (entry && entry.cardio) {
+          const cls = entry.cardio === 'OTHER' ? 'cardio other' : 'cardio';
+          items.push('<span class="hw-bar ' + cls + '"></span>');
+          cardio++;
+          if (entry.cardioNote) {
+            const typeLabel = cardioLabel(entry.cardio);
+            customNotes.push({ date: d, text: typeLabel + ' · ' + entry.cardioNote });
+          }
+        }
       });
       if (items.length === 0) continue;
       anyData = true;
@@ -3002,6 +3299,18 @@
       list.appendChild(row);
     }
 
+    // Adiciona notas de cardios customizados, se houver
+    if (customNotes.length > 0) {
+      const notesEl = document.createElement('div');
+      notesEl.className = 'history-custom-notes';
+      notesEl.innerHTML = '<div class="history-custom-notes-label">ANOTAÇÕES DOS CARDIOS</div><ul>' +
+        customNotes.map(n =>
+          '<li><span class="when">' + n.date.getDate() + '/' + (n.date.getMonth() + 1) + '</span>' +
+          n.text.replace(/</g, '&lt;') + '</li>'
+        ).join('') + '</ul>';
+      list.appendChild(notesEl);
+    }
+
     if (!anyData) {
       list.innerHTML = '<div class="history-empty">Ainda não tem semanas anteriores registradas. Conforme você for treinando, elas aparecem aqui.</div>';
     }
@@ -3014,16 +3323,22 @@
   let editingWorkout = null;
   let editingCardio = null;
 
+  let editingCardioNote = '';
+
   function openDayModal(iso) {
     editingDay = iso;
     const entry = getDayEntry(iso);
     editingWorkout = entry && entry.workout ? entry.workout : '';
     editingCardio = entry && entry.cardio ? entry.cardio : '';
+    editingCardioNote = entry && entry.cardioNote ? entry.cardioNote : '';
 
     document.getElementById('day-modal-title').textContent = iso === todayISO() ? 'Hoje' : 'Editar dia';
     const d = dateFromISO(iso);
     document.getElementById('day-modal-date').textContent =
       DAY_LABELS[(d.getDay() + 6) % 7] + ' · ' + d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear();
+
+    const noteInput = document.getElementById('day-modal-cardio-custom-input');
+    if (noteInput) noteInput.value = editingCardioNote;
 
     refreshModalButtons();
     document.getElementById('day-modal-overlay').classList.add('open');
@@ -3036,6 +3351,7 @@
     document.querySelectorAll('[data-edit-cardio]').forEach(b => {
       b.classList.toggle('active', b.dataset.editCardio === editingCardio);
     });
+    // input de anotação fica sempre visível
   }
 
   function closeDayModal() {
@@ -3060,7 +3376,9 @@
     if (e.target.id === 'day-modal-overlay') closeDayModal();
   });
   document.getElementById('day-modal-save').addEventListener('click', () => {
-    setDayEntry(editingDay, editingWorkout, editingCardio);
+    const noteInput = document.getElementById('day-modal-cardio-custom-input');
+    const noteText = noteInput ? noteInput.value.slice(0, 80) : '';
+    setDayEntry(editingDay, editingWorkout, editingCardio, noteText);
     closeDayModal();
     renderDashboard();
     showToast('Dia atualizado!');
